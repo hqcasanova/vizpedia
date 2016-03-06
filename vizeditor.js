@@ -17,9 +17,8 @@
     document.getElementById('textarea').onkeydown = function (event) {
         event = event || window.event;
 
-        event.preventDefault();
-
         if ((event.target && event.target.className == 'caption' ) && (event.keyCode == 13 || event.keyCode == 9 || event.keyCode == 32)) {
+            event.preventDefault();
             Vizpedia.getUrls(event.target.innerHTML.trim());
         }
     };
