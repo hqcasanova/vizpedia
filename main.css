@@ -3,6 +3,9 @@ div, img {
     padding: 0;
     border: 0;
 }
+img[src=''] {
+    opacity: 0;
+}
 body {
     -webkit-font-smoothing: antialiased;
 }
