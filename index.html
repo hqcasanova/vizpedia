@@ -9,15 +9,27 @@
     <link href="main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div id="textarea">
-      <div class="image-card">
+    <form action="javascript:void(0);" class="toolbar">
+        <select id="select-language" name="language">
+            <option value="1" selected="">English</option>
+            <option value="0">Español</option>
+            <option value="2">Français</option>
+            <option value="3">Català</option>
+            <option value="4">Italiano</option>
+            <option value="5">Deutsch</option>
+            <option value="6">Português</option>
+            <option value="7">Português (Brasil)</option>
+            <option value="8">Galego</option>
+        </select>
+        <img alt="delete" src="delete.png" id="delete-button"/>
+    </form>
+    <div id="textarea"><div class="image-card">
         <div class="frame">
-          <img src="" class="picto"/>
+            <img alt="" src="" class="picto"/>
         </div>
         <div contenteditable class="caption"></div>
-      </div>
-    </div>
-    <script src="//rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js"></script>
+    </div></div>
+    <script src="http://rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js"></script>
     <script src="vizeditor.js"></script>
 </body>
 </html>

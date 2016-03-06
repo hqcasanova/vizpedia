@@ -1,18 +1,50 @@
-div, img {
+body, div, img, form, label, select, option {
     margin: 0;
     padding: 0;
     border: 0;
+    outline: none;
+    font: inherit;
 }
 img[src=''] {
-    opacity: 0;
+    visibility: hidden;
 }
 body {
+    font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    font-size: 100%;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.toolbar {
+    overflow: hidden;
+    font-size: 1.7em;
+    line-height: 1.5em;
+}
+#delete-button {
+    float: right;
+    width: auto;
+    height: 1.5em;
+    padding: .3em;
+    vertical-align: middle;
+    background: gray;
+    -webkit-border-radius: 50%; 
+    -moz-border-radius: 50%; 
+    border-radius: 50%;
+    cursor: pointer;
+}
+#select-language {
+    font-size: .7em;
+}
+#textarea {
+    margin: 1em auto;
 }
 .image-card {
     display: inline-block;
+    margin-bottom: 2em;
+    padding: 0 .5em;
     text-align: center;
-    font-size: 200%;
+    font-size: 2em;
+    line-height: 0;
+    border-bottom: 1px solid rgb(211, 211, 211);
 }
 .frame {
     min-height: 5em;
@@ -21,10 +53,41 @@ body {
 .picto {
     width: auto;
     height: 5em;
+    line-height: 0;
 }
 .caption {
-    font-family: font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
-    font-weight: 300;
     margin: auto;
-    outline: none;
+    line-height: 1.5em;
+    font-weight: 300;
+}
+
+@media only screen and (min-width: 1200px) {
+  body {font-size: 110%}
+}
+@media only screen and (min-width: 1400px) {
+  body {font-size: 120%}
+}
+@media only screen and (min-width: 1600px) {
+  body {font-size: 130%}
+}
+@media only screen and (min-width: 1800px) {
+  body {font-size: 140%}
+}
+@media only screen and (min-width: 2000px) {
+  body {font-size: 150%}
+}
+@media only screen and (min-width: 2200px) {
+  body {font-size: 160%}
+}
+@media only screen and (min-width: 2400px) {
+  body {font-size: 170%}
+}
+@media only screen and (min-width: 2600px) {
+  body {font-size: 180%}
+}
+@media only screen and (min-width: 2800px) {
+  body {font-size: 190%}
+}
+@media only screen and (min-width: 3000px) {
+  body {font-size: 200%}
 }
