@@ -1,16 +1,33 @@
 (function () {
     'use strict';
 
+    var TRIM_REGEX = /^(<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0])+$/gi;
+    var WORD_KEYS = [9, 13, 32];
+
     var langSelEl;
     var newCardEl;
     var textAreaEl;
     var imgCardEl;
+    
+    //Makes sure trimming also takes into account <br> (introduced by a bug on Firefox) and any nbsp
+    //(added to avoid a bug on Firefox and IE)
+    String.prototype.trim = function () {
+        return this.replace(TRIM_REGEX, '');
+    };
 
     //Polyfill for IE8
-    if (!String.prototype.trim) {
-        String.prototype.trim = function () {
-            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-        };
+    if (!Array.indexOf) {
+        Array.prototype.indexOf = function (obj) {
+            var arrLength = this.length;
+            var i = 0;
+
+            for (var i; i < arrLength; i++) {
+                if (this[i] == obj) {
+                    return i;
+                }
+            }
+            return -1;
+        }
     }
 
     //Needed for referencing the chosen language on keypress (see 'onWordBoundary' below)
@@ -53,24 +70,26 @@
         var target = event.target;
         var word;
 
-        if ((target && target.className == 'caption' ) && (event.keyCode == 13 || event.keyCode == 9 || event.keyCode == 32)) {
+        if ((target && target.className == 'caption') && (WORD_KEYS.indexOf(event.keyCode) != -1)) {
             
-            //Prevent any caret movements or further changes to the text
+            //Prevent any caret movements
             event.preventDefault();
-            target.contentEditable = 'false';
 
-            //Fetches the urls of all images corresponding to the term just typed in
+            //Fetches the urls of all images corresponding to the term just typed in (if any)
             word = event.target.innerHTML.trim();
-            window.Vizpedia.getUrls(
-                word, 
-                langSelEl.value, 
-                onPictoResponse.bind(target.parentElement.children[0], word)
-            );
+            if (word.length) {
+                target.contentEditable = 'false';  //TODO: remove this once backspace supported
+                window.Vizpedia.getUrls(
+                    word, 
+                    langSelEl.value, 
+                    onPictoResponse.bind(target.parentElement.children[0], word)
+                );
 
-            //Appends a new empty image card right next to the current one and makes caret appear on it
-            textAreaEl.appendChild(newCardEl);
-            newCardEl.children[1].focus();
-            newCardEl = newCardEl.cloneNode(true);
+                //Appends a new empty image card right next to the current one and makes caret appear on it
+                textAreaEl.appendChild(newCardEl);
+                newCardEl.children[1].focus();
+                newCardEl = newCardEl.cloneNode(true);
+            }
         }
     }
 }());
