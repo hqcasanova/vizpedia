@@ -157,6 +157,9 @@ h1, h2, .more-info {
 }
 
 /* Responsive design */
+@media only screen and (max-width: 399px) {
+  .forkme {display: none}
+}
 @media only screen and (max-width: 639px) {
   body {font-size: 80%}
 }
