@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var TRIM_REGEX = /^(<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0])+$/gi;
+    var TRIM_REGEX = /^(<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|:|\?|!)+$/gi;
     var WORD_KEYS = [9, 13, 32];
 
     var langSelEl;
