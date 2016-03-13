@@ -37,7 +37,8 @@
     textAreaEl = document.getElementById('textarea');
 
     //Sets up the 'mold' for new image cards using the current (and only) image card
-    imgCardEl = textAreaEl.children[0]
+    imgCardEl = textAreaEl.children[0];
+    imgCardEl.onclick = onCardClick;
     newCardEl = imgCardEl.cloneNode(true);
 
     //Makes cursor appear on first image card's input area below the pictogram
@@ -47,11 +48,17 @@
     textAreaEl.onkeydown = onWordBoundary;
     document.getElementById('delete-button').onclick = onDelete;
 
-
     //Wipes out all the existing image cards and adds a blank one.
     function onDelete () {
         textAreaEl.innerHTML = newCardEl.outerHTML;
         textAreaEl.children[0].children[1].focus();
+    }
+
+    //Sets focus on input area on clicking the image card
+    //TODO: add support for IE8 (no currentTarget)
+    function onCardClick (event) {
+        event = event || window.event;
+        event.currentTarget.children[1].focus();
     }
 
     function onPictoResponse (word, imgUrls) {
@@ -67,13 +74,17 @@
     function onWordBoundary (event) {
         event = event || window.event;
 
-        var target = event.target;
+        var target = event.target || event.srcElement;
         var word;
 
         if ((target && target.className == 'caption') && (WORD_KEYS.indexOf(event.keyCode) != -1)) {
             
             //Prevent any caret movements
-            event.preventDefault();
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
 
             //Fetches the urls of all images corresponding to the term just typed in (if any)
             word = event.target.innerHTML.trim();
@@ -88,6 +99,7 @@
                 //Appends a new empty image card right next to the current one and makes caret appear on it
                 textAreaEl.appendChild(newCardEl);
                 newCardEl.children[1].focus();
+                newCardEl.onclick = onCardClick;
                 newCardEl = newCardEl.cloneNode(true);
             }
         }

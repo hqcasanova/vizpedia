@@ -1,10 +1,13 @@
-body, div, img, form, label, select, option {
+/* Reset */
+body, div, img, form, label, select, option, a, h1, h2, p, fieldset, a {
     margin: 0;
     padding: 0;
     border: 0;
     outline: none;
     font: inherit;
 }
+
+/* Custom defaults */
 img[src=''] {
     visibility: hidden;
 }
@@ -14,29 +17,114 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.toolbar {
+h1, h2, .more-info {
+    font-weight: normal;
+    font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
+}
+
+/* Header */
+.title {
+    background: black;
+    color: white;
+    padding: .3em;
+    font-size: 3.5em;
+}
+.title img {
+    display: inline-block;
+    margin-right: .2em;
+    vertical-align: middle;
+}
+
+/* Demo area */
+.notebook {
+    margin-bottom: 1em;
+    padding-top: 65px;
+    background: url('spiral.jpg') left top repeat-x;
+}
+.intro {
     overflow: hidden;
+    margin: .5em;
+    padding: .3em .5em;
     font-size: 1.7em;
     line-height: 1.5em;
+    color: white;
+    background: gray;
+    -webkit-border-radius: .5em; 
+    -moz-border-radius: .5em; 
+    border-radius: .5em;
 }
-#delete-button {
+.intro p {
+    font-size: .8em;
+}
+.intro a {
+    color: white;
+}
+
+/* Demo area controls */
+.toolbar {
     float: right;
-    width: auto;
-    height: 1.5em;
+    padding: .3em 0;
+}
+.button {
+    display: inline-block;
+    margin-left: .5em;
     padding: .3em;
     vertical-align: middle;
-    background: gray;
     -webkit-border-radius: 50%; 
     -moz-border-radius: 50%; 
     border-radius: 50%;
+    border: 2px solid white;
     cursor: pointer;
+}
+.button img {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
 }
 #select-language {
     font-size: .7em;
 }
 #textarea {
-    margin: 1em auto;
+    margin-top: 2em;
 }
+
+/* JavaScript detection */
+.no-js #textarea, .no-js .toolbar {
+    display: none;
+}
+.no-js .notice {
+    display: block;
+}
+.notice {                                   
+    display: none;
+    text-align: center;
+    font-size: 1.3em;
+    color: black;
+    text-decoration: none;
+}
+.notice:before {
+    content: "!"; 
+    display: inline-block;
+    width: 1.2em;
+    margin-right: .3em;
+    text-align: center;
+    line-height: 1.2em;
+    vertical-align: middle;
+    font-size: 3em;
+    font-weight: bold;
+    color: gray;
+    opacity: .7;
+    border: 3px solid gray;
+    -moz-border-radius: 1.2em;
+    -webkit-border-radius: 1.2em;
+    border-radius: 1.2em;
+}
+.notice span {
+    text-decoration: underline;
+}
+
+/* Single-word container */
 .image-card {
     display: inline-block;
     margin-bottom: 2em;
@@ -59,13 +147,24 @@ body {
     margin: auto;
     line-height: 1.5em;
     font-weight: 300;
+    color: rgb(110, 110, 110);
 }
 
+/* Responsive design */
 @media only screen and (max-width: 639px) {
   body {font-size: 80%}
 }
-@media only screen and (min-width: 640px) and (max-width: 959px) { {
+@media only screen and (min-width: 640px) and (max-width: 959px) {
   body {font-size: 90%}
+}
+@media only screen and (min-width: 800px) {
+  .intro p {
+      width: 65%;
+      display: inline-block;
+  }
+  .no-js .intro p {
+      width: 100%;
+  }
 }
 @media only screen and (min-width: 1200px) {
   body {font-size: 110%}

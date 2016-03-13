@@ -8,27 +8,39 @@
     <title>Vizpedia | A pure-JS plugin for visual word definitions</title>
     <link href="main.css" rel="stylesheet" type="text/css">
 </head>
-<body>
-    <form action="javascript:void(0);" class="toolbar">
-        <select id="select-language" name="language">
-            <option value="1" selected="">English</option>
-            <option value="0">Español</option>
-            <option value="2">Français</option>
-            <option value="3">Català</option>
-            <option value="4">Italiano</option>
-            <option value="5">Deutsch</option>
-            <option value="6">Português</option>
-            <option value="7">Português (Brasil)</option>
-            <option value="8">Galego</option>
-        </select>
-        <img alt="delete" src="delete.png" id="delete-button"/>
-    </form>
-    <div id="textarea"><div class="image-card">
-        <div class="frame">
-            <img alt="" src="" class="picto"/>
-        </div>
-        <div contenteditable class="caption">&nbsp;</div>
-    </div></div>
+<body class="no-js">
+    <h1 class="title"><img alt="logo" src="vizpedia.png" height="67" width="96"/>Vizpedia</h1>
+    <div class="notebook">
+        <form action="javascript:void(0);" class="intro">
+            <p>As you type words, a <a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a> for each one in the chosen language will be displayed. Some words may not have a corresponding pictogram.</p>
+            <fieldset class="toolbar">
+                <select id="select-language" name="language">
+                    <option value="1" selected="">English</option>
+                    <option value="0">Español</option>
+                    <option value="2">Français</option>
+                    <option value="3">Català</option>
+                    <option value="4">Italiano</option>
+                    <option value="5">Deutsch</option>
+                    <option value="6">Português</option>
+                    <option value="7">Português (Brasil)</option>
+                    <option value="8">Galego</option>
+                </select>
+                <a role="button" tabindex="0" href="#" id="delete-button" class="button">
+                    <img alt="delete" src="delete.png" height="76" width="37" />
+                </a>
+            </fieldset>
+        </form>
+        <div id="textarea"><div class="image-card">
+            <div class="frame">
+                <img alt="" src="" class="picto"/>
+            </div>
+            <div contenteditable class="caption">&nbsp;</div>
+        </div></div>
+        <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
+    </div>
+    <script>
+        document.body.className = "";       //JavaScript detection
+    </script>
     <script src="http://rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js"></script>
     <script src="vizeditor.js"></script>
 </body>
