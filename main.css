@@ -39,7 +39,7 @@ h1, h2, .more-info {
 .notebook {
     margin-bottom: 1em;
     padding-top: 65px;
-    background: url('spiral.jpg') left top repeat-x;
+    background: transparent url('spiral.jpg') repeat-x left top;
 }
 .intro {
     overflow: hidden;
