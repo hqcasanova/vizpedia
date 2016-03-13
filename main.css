@@ -34,6 +34,12 @@ h1, h2, .more-info {
     margin-right: .2em;
     vertical-align: middle;
 }
+.forkme {
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    border-style: none;
+}
 
 /* Demo area */
 .notebook {
