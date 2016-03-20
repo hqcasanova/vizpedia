@@ -1,10 +1,15 @@
 /* Reset */
-body, div, img, form, label, select, option, a, h1, h2, p, fieldset, a {
+body, div, img, form, label, select, option, a, h1, h2, p, fieldset {
     margin: 0;
     padding: 0;
     border: 0;
     outline: none;
     font: inherit;
+}
+select {
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+  appearance: menulist !important;
 }
 
 /* Custom defaults */
@@ -143,6 +148,12 @@ h1, h2, .more-info {
 .frame {
     min-height: 5em;
     min-width: 5em;
+}
+.frame.multiple {
+    cursor: pointer;
+}
+.frame .load {
+    margin-top: 2.5em;
 }
 .picto {
     width: auto;
