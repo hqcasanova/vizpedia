@@ -5,7 +5,7 @@
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
     var WORD_KEYS = [9, 13, 32];        //keycodes considered word boundary markers: tab, enter, space
     var FRAME_CLASS;                    //default pictogram container's class
-    var PICTO_CLASS;                    //default pictogram's img class
+    var PICTO_CLASS = 'picto';          //pictogram's img class
     var LOAD_CLASS = 'load';            //class for loading spinner
     var MULTIPICTO_CLASS = 'multiple';  //class for pictogram container if multiple pictos found
     var WORD_HASH_SEPARATOR = '+';
@@ -47,7 +47,6 @@
     //Sets up the 'mold' for new image cards using the current (and only) image card
     imgCardEl = textAreaEl.firstChild;
     FRAME_CLASS = imgCardEl.firstChild.className;
-    PICTO_CLASS = imgCardEl.firstChild.firstChild.className;
     imgCardEl.onclick = focusOnClick(imgCardEl);
     newCardEl = imgCardEl.cloneNode(true);
 
