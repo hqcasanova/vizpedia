@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    var LOADING_IMG = 'data:image/gif;base64,R0lGODlhKwALAMIEAP///wAAAIKCggAAABRaZhRaZhRaZhRaZiH/C05FVFNDQVBFMi4wAwEAAAAh+QQJMgADACwAAAAAKwALAAADNDiyzPNQtRbhpHfWTCP/mgduYEl+Z8mlGauG1ii+7bzadBejeL64sIfvAtQJR7yioHJsJQAAIfkECTIAAwAsAAAAACsACwAAAz84sMzzcIhJaYQ1q8bBzeAHVh0njtOJlo06uiDrRKhF14K8wNpd6x4fikfSEW0YHPCYEo6WzlBUI7s8albJMAEAIfkECTIAAwAsAAAAACsACwAAAz84sszzcIBJaYQtq6xj/dPFjaRwgZ9YrsuJWhHLui+gyiT93jino7xe4wcKCluemi127ECUS8xqM7o8alaqLwEAIfkEATIAAwAsAAAAACsACwAAA0I4sszzULUWIbgYy0kjn1UmXl8HlU40iuhStUK4YvDbyjNQe7ea671T8PEDomxHX24nTFp+zEd0UNxwKtISljobJAAAOw==';
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
     var WORD_KEYS = [9, 13, 32];        //keycodes considered word boundary markers: tab, enter, space
     var FRAME_CLASS;                    //default pictogram container's class
@@ -136,8 +135,7 @@
                 onPictoResponse(frameEl, word)(pictoUrls[word]);
                 callback();
             } else {
-                frameEl.firstChild.className = 'load';
-                frameEl.firstChild.src = LOADING_IMG;
+                frameEl.className += ' ' + LOAD_CLASS;
                 window.Vizpedia.getUrls(
                     word, 
                     langSelEl.value,
@@ -160,7 +158,9 @@
             var numPictos = imgUrls.length;
             var i = 1;
 
-            //Clears card of any previous pictogram
+            //Resets card
+            frameEl.className = FRAME_CLASS;
+            frameEl.onclick = function () {};
             imgEl.src = '';
 
             //If pictos found, shows first one
@@ -186,10 +186,6 @@
                         nextPicto++;
                     }
                 }
-
-            //Resets pictogram's container cursor
-            } else {
-                frameEl.className = FRAME_CLASS;
             }
         }
     }
