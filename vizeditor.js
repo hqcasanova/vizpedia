@@ -2,7 +2,9 @@
     'use strict';
 
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
-    var WORD_KEYS = [9, 13, 32];        //keycodes considered word boundary markers: tab, enter, space
+    var WORD_KEYS = '|9|13|32|';        //keycodes considered word boundary markers: tab, enter, space
+    var SPACE_HTML = '&nbsp;';          //HTML-encoded character used as default word-boundary marker
+    var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
     var PICTO_CLASS = 'picto';          //pictogram's img class
     var LOAD_CLASS = 'load';            //class for loading spinner
@@ -22,19 +24,22 @@
         return this.replace(TRIM_REGEX, '');
     };
 
-    //Polyfill for IE8
-    if (!Array.indexOf) {
-        Array.prototype.indexOf = function (obj) {
-            var arrLength = this.length;
-            var i = 0;
-
-            for (var i; i < arrLength; i++) {
-                if (this[i] == obj) {
-                    return i;
+    //IE8 Polyfill for textContent functionality
+    if (Object.defineProperty 
+        && Object.getOwnPropertyDescriptor 
+        && Object.getOwnPropertyDescriptor(Element.prototype, "textContent") 
+        && !Object.getOwnPropertyDescriptor(Element.prototype, "textContent").get) {
+        (function() {
+            var innerText = Object.getOwnPropertyDescriptor(Element.prototype, "innerText");
+            Object.defineProperty(Element.prototype, "textContent", {
+                get: function() {
+                    return innerText.get.call(this);
+                },
+                set: function(s) {
+                    return innerText.set.call(this, s);
                 }
-            }
-            return -1;
-        }
+            });
+        })();
     }
 
     //Needed for referencing the chosen language on keypress (see 'onWordBoundary' below)
@@ -45,6 +50,7 @@
 
     //Sets up the 'mold' for new image cards using the current (and only) image card
     imgCardEl = textAreaEl.firstChild;
+    CARD_CLASS = imgCardEl.className;
     FRAME_CLASS = imgCardEl.firstChild.className;
     imgCardEl.onclick = focusOnClick(imgCardEl);
     newCardEl = imgCardEl.cloneNode(true);
@@ -53,24 +59,31 @@
     imgCardEl.lastChild.focus();
 
     //Assigns global handlers
-    textAreaEl.onkeydown = onWordBoundary;
-    document.getElementById('delete-button').onclick = onDelete;
+    textAreaEl.onkeydown = onWordBoundary(textAreaEl);
+    document.getElementById('erase-button').onclick = onDelete;
 
-    //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
-    //with the next word. This is to maximise cache hits when inserting new words.
-    function autoWrite (words, cardEl) {
-        if (words.length) {
-            cardEl.lastChild.innerHTML = words.shift();
-            addPictos(cardEl.lastChild, function () {
-                setFocus();
-                autoWrite(words, cardEl.nextSibling);
-            });
-        }
-    }
+    //TODO: Dynamically centers textarea content according to default image card's rendered size
 
     //If there's a hash fragment, takes words from it. Truncates word list if necessary.
     if (location.hash) {
         autoWrite(location.hash.trim().split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
+    }
+
+    //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
+    //with the next word. This is to maximise cache hits when inserting new words.
+    function autoWrite (words, cardEl) {
+        var inputEl = cardEl.lastChild;
+        if (words.length) {
+            inputEl.contentEditable = false;       //only allows edition once response retrieved
+            cardEl.className += ' disabled';
+            inputEl.innerHTML = words.shift();
+            addPictos(inputEl, function () {
+                newCard();
+                inputEl.contentEditable = true;
+                cardEl.className = CARD_CLASS;
+                autoWrite(words, cardEl.nextSibling);
+            });
+        }
     }
 
     //Wipes out all the existing image cards and adds a blank one.
@@ -85,36 +98,50 @@
     }
 
     //Actions to be performed when a word ending is detected (such as pressing space)
-    function onWordBoundary (event) {
-        event = event || window.event;
+    function onWordBoundary (currentTarget) {
+        return function (event) {
+            event = event || window.event;
 
-        var target = event.target || event.srcElement;
+            var target = event.target || event.srcElement;
 
-        if ((target && target.className == 'caption') && (WORD_KEYS.indexOf(event.keyCode) != -1)) {
-            
-            //Prevents any caret movements
-            if (event.preventDefault) {
-                event.preventDefault();
-            } else {
-                event.returnValue = false;
+            if ((target && target.className == 'caption') && (WORD_KEYS.indexOf('|' + event.keyCode + '|') != -1)) {
+                
+                //Prevents any caret movements
+                if (event.preventDefault) {
+                    event.preventDefault();
+                } else {
+                    event.returnValue = false;
+                }
+                  
+                //Adds any found pictograms
+                addPictos(target);
+
+                //Updates URL fragment with whatever text has been written so far
+                location.hash = currentTarget.textContent.trim().replace(/\s+/g, '+');
+
+                //Sets focus on next image card
+                setFocus(target.parentElement.nextSibling);
             }
-              
-            //Adds any found pictograms
-            addPictos(target);
-            setFocus(target.parentElement.nextSibling);
         }
     }
 
-    //Sets focus on next card element. If there's no sibling card, appends a new empty one right next to the 
-    //current.
+    //Appends a new image card to the text area, complete with event handlers. Uses the global
+    //image card mold element, updating it at the end for the next new card.
+    function newCard () {
+        textAreaEl.appendChild(newCardEl);
+        newCardEl.onclick = focusOnClick(newCardEl);
+        newCardEl = newCardEl.cloneNode(true);
+
+        return textAreaEl.lastChild;
+    }
+
+    //Sets focus on next card element's input area. If there's no sibling card, appends a new empty 
+    //one right next to the current.
     function setFocus (nextCardEl) {
         if (nextCardEl) {
             nextCardEl.lastChild.focus();
         } else {
-            textAreaEl.appendChild(newCardEl);
-            newCardEl.lastChild.focus();
-            newCardEl.onclick = focusOnClick(newCardEl);
-            newCardEl = newCardEl.cloneNode(true);
+            newCard().lastChild.focus();
         }
     }
 
@@ -127,6 +154,9 @@
         callback = callback || function () {};
 
         if (word.length) {
+
+            //Normalises input's content to ensure later on there's at least one space separating words
+            activeInput.innerHTML = activeInput.innerHTML.replace(SPACE_HTML, '') + SPACE_HTML;
 
             //If not cached, fetches the urls of all images corresponding to the term just typed in (if any)
             activeInput.parentElement.title = word;

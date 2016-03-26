@@ -11,13 +11,12 @@
     <link href="main.css" rel="stylesheet" type="text/css">
 </head>
 <body class="no-js">
-    <h1 class="title"><img alt="logo" src="vizpedia.png" height="67" width="96"/>Vizpedia</h1>
-    <a href="https://github.com/hqcasanova/vizpedia" class="forkme"><img src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <h1 class="title"><img alt="logo" src="vizpedia.png" height="67" width="96"/>Vizpedia<sub>beta</sub></h1>
+    <a href="https://github.com/hqcasanova/vizpedia" class="forkme"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <div class="notebook">
-        <form action="javascript:void(0);" class="intro">
-            <p>Type a word in to get its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>. Some words may have more than one. Press on it to change it. Others may have none.</p>
-            <fieldset class="toolbar">
-                <select id="select-language" name="language">
+        <form action="javascript:void(0);" class="top-bar">
+            <fieldset class="tools">
+                <select id="select-language" name="language" title="Select language">
                     <option value="1" selected="">English</option>
                     <option value="0">Español</option>
                     <option value="2">Français</option>
@@ -28,12 +27,19 @@
                     <option value="7">Português (Brasil)</option>
                     <option value="8">Galego</option>
                 </select>
-                <a role="button" tabindex="0" href="#" id="delete-button" class="button">
-                    <img alt="delete" src="delete.png" height="76" width="37" />
+                <a role="button" href="#" title="Erase" id="erase-button" class="button">
+                    <img alt="erase" src="erase.png" height="76" width="37" />
                 </a>
             </fieldset>
         </form>
         <div id="textarea"><div class="image-card"><div class="frame"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
+        <ul class="directions">
+            <li class="info">Type in a word followed by a space to get its image representation or symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
+            <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
+            <li class="info">Other words may currently have no entry in the visual dictionary for the chosen language. In such case, no pictogram will be displayed. The symbols were originally aimed at Spanish speakers and its expansion to other languages is still work in progress.</li>
+            <li class="info">As the text is changed, the address bar is updated accordingly. Using that address, you can share the page with the words you have already typed in. They will be added automatically once the page is loaded.</li>
+            <li class="info">Use the erase button on the top right to clear all text and reset the address bar.</li> 
+        </ul>
         <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
     </div>
     <script>

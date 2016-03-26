@@ -1,15 +1,11 @@
 /* Reset */
-body, div, img, form, label, select, option, a, h1, h2, p, fieldset {
+body, div, img, form, label, option, a, h1, h2, p, fieldset, ul, li {
     margin: 0;
     padding: 0;
     border: 0;
     outline: none;
+    list-style: none;
     font: inherit;
-}
-select {
-  -webkit-appearance: menulist !important;
-  -moz-appearance: menulist !important;
-  appearance: menulist !important;
 }
 
 /* Custom defaults */
@@ -22,7 +18,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-h1, h2, .more-info {
+h1, h2 {
     font-weight: normal;
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
 }
@@ -32,12 +28,15 @@ h1, h2, .more-info {
     background: black;
     color: white;
     padding: .3em;
-    font-size: 3.5em;
+    font-size: 3.2em;
 }
 .title img {
     display: inline-block;
     margin-right: .2em;
     vertical-align: middle;
+}
+.title sub {
+    font-size: .4em;
 }
 .forkme {
     position: absolute; 
@@ -46,33 +45,31 @@ h1, h2, .more-info {
     border-style: none;
 }
 
-/* Demo area */
+/* Text area */
 .notebook {
-    margin-bottom: 1em;
     padding-top: 65px;
-    background: transparent url('spiral.jpg') repeat-x left top;
+    background: rgb(250, 250, 250) url('spiral.png') repeat-x left top;
 }
-.intro {
+.directions {
     overflow: hidden;
-    margin: .5em;
-    padding: .3em .5em;
-    font-size: 1.7em;
-    line-height: 1.5em;
-    color: white;
     background: gray;
-    -webkit-border-radius: .5em; 
-    -moz-border-radius: .5em; 
-    border-radius: .5em;
 }
-.intro p {
-    font-size: .8em;
+.info {
+    margin: 1.5em;
+    line-height: 1.5em;
+    font-size: 1.3em;
+    color: white;
 }
-.intro a {
+.info a {
     color: white;
 }
 
-/* Demo area controls */
-.toolbar {
+/* Text area controls */
+.top-bar {
+    overflow: hidden;
+    padding: .3em .5em;
+}
+.tools {
     float: right;
     padding: .3em 0;
 }
@@ -84,8 +81,9 @@ h1, h2, .more-info {
     -webkit-border-radius: 50%; 
     -moz-border-radius: 50%; 
     border-radius: 50%;
-    border: 2px solid white;
+    border: 2px solid black;
     cursor: pointer;
+    font-size: 25px;
 }
 .button img {
     display: block;
@@ -94,7 +92,8 @@ h1, h2, .more-info {
     vertical-align: middle;
 }
 #select-language {
-    font-size: .7em;
+    font-size: 16px;
+    cursor: pointer;
 }
 #textarea {
     margin-top: 2em;
@@ -149,11 +148,17 @@ h1, h2, .more-info {
     min-height: 5em;
     min-width: 5em;
 }
+.frame:hover {
+    background: gray;
+}
 .multiple {
     cursor: pointer;
 }
 .load {
     background: transparent url('data:image/gif;base64,R0lGODlhKwALAMIEAP///wAAAIKCggAAABRaZhRaZhRaZhRaZiH/C05FVFNDQVBFMi4wAwEAAAAh+QQJMgADACwAAAAAKwALAAADNDiyzPNQtRbhpHfWTCP/mgduYEl+Z8mlGauG1ii+7bzadBejeL64sIfvAtQJR7yioHJsJQAAIfkECTIAAwAsAAAAACsACwAAAz84sMzzcIhJaYQ1q8bBzeAHVh0njtOJlo06uiDrRKhF14K8wNpd6x4fikfSEW0YHPCYEo6WzlBUI7s8albJMAEAIfkECTIAAwAsAAAAACsACwAAAz84sszzcIBJaYQtq6xj/dPFjaRwgZ9YrsuJWhHLui+gyiT93jino7xe4wcKCluemi127ECUS8xqM7o8alaqLwEAIfkEATIAAwAsAAAAACsACwAAA0I4sszzULUWIbgYy0kjn1UmXl8HlU40iuhStUK4YvDbyjNQe7ea671T8PEDomxHX24nTFp+zEd0UNxwKtISljobJAAAOw==') no-repeat center center;
+}
+.disabled {
+    opacity: .3;
 }
 .picto {
     width: auto;
