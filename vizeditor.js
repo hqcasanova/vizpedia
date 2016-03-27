@@ -12,11 +12,13 @@
     var WORD_HASH_SEPARATOR = '+';
     var WORD_HASH_LIMIT = '20';
 
-    var langSelEl;
-    var newCardEl;
-    var textAreaEl;
-    var imgCardEl;
-    var pictoUrls = {};           //Global response cache. Every entry points to a list of urls.
+    var infoEl;                 //DOM element for info button
+    var eraseEl;                //DOM element for erase button
+    var langSelEl;              //DOM element needed for referencing the chosen language on keypress (see 'onWordBoundary' below)
+    var textAreaEl;             //DOM element for block of free text, the image cards' container    
+    var imgCardEl;              //DOM element for container of both pictogram and text represented by it
+    var newCardEl;              //DOM element used as the mold for new image cards
+    var pictoUrls = {};         //Global response cache. Every entry points to a list of urls.
     
     //Makes sure trimming also takes into account <br> (introduced by a bug on Firefox) and any nbsp
     //(added to avoid a bug on Firefox and IE)
@@ -42,31 +44,50 @@
         })();
     }
 
-    //Needed for referencing the chosen language on keypress (see 'onWordBoundary' below)
-    langSelEl = document.getElementById('select-language');
-
-    //Caches block of free text, the image cards' container
+    //Caches DOM elements
+    infoEl = document.getElementById('info-button');
+    eraseEl = document.getElementById('erase-button');
+    langSelEl = document.getElementById('select-language');   
     textAreaEl = document.getElementById('textarea');
-
+    
     //Sets up the 'mold' for new image cards using the current (and only) image card
     imgCardEl = textAreaEl.firstChild;
     CARD_CLASS = imgCardEl.className;
     FRAME_CLASS = imgCardEl.firstChild.className;
-    imgCardEl.onclick = focusOnClick(imgCardEl);
     newCardEl = imgCardEl.cloneNode(true);
+
+    //Assigns event handlers
+    imgCardEl.onclick = focusOnClick(imgCardEl);
+    textAreaEl.onkeydown = onWordBoundary(textAreaEl);
+    eraseEl.onclick = onDelete;
+    infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
+
+    //TODO: Dynamically centers textarea content according to default image card's rendered size
 
     //Makes cursor appear on first image card's input area below the pictogram
     imgCardEl.lastChild.focus();
 
-    //Assigns global handlers
-    textAreaEl.onkeydown = onWordBoundary(textAreaEl);
-    document.getElementById('erase-button').onclick = onDelete;
-
-    //TODO: Dynamically centers textarea content according to default image card's rendered size
-
     //If there's a hash fragment, takes words from it. Truncates word list if necessary.
     if (location.hash) {
         autoWrite(location.hash.trim().split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
+
+        //TODO: detect when the element is below the fold and only then cancel autofocus
+    }
+
+    //Instead of using local anchoring, emulate it through JS to avoid polluting the hash fragment (used to maintain text state) 
+    function goTo (targetEl) {
+        return function (event) {
+            event = event || window.event;
+
+            //Prevents change of hash fragment and scrolling
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
+
+            targetEl.scrollIntoView();
+        }
     }
 
     //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
@@ -87,14 +108,16 @@
     }
 
     //Wipes out all the existing image cards and adds a blank one.
-    function onDelete () {
-        textAreaEl.innerHTML = newCardEl.outerHTML;
-        textAreaEl.firstChild.lastChild.focus();
+    function onDelete () { 
+        textAreaEl.innerHTML = '';
+        newCard().lastChild.focus();
     }
 
     //Sets focus on input area on clicking the image card
     function focusOnClick (currentTarget) {       
-        return function () {currentTarget.lastChild.focus()}
+        return function () {
+            currentTarget.lastChild.focus();
+        }
     }
 
     //Actions to be performed when a word ending is detected (such as pressing space)
@@ -166,14 +189,20 @@
                 callback();
             } else {
                 frameEl.className += ' ' + LOAD_CLASS;
-                window.Vizpedia.getUrls(
-                    word, 
-                    langSelEl.value,
-                    function (imgUrls) {
-                        onPictoResponse(frameEl, word)(imgUrls);
-                        callback();
-                    }
-                );
+                try {
+                    window.Vizpedia.getUrls(
+                        word, 
+                        langSelEl.value,
+                        function (imgUrls) {
+                            onPictoResponse(frameEl, word)(imgUrls);
+                            callback();
+                        }
+                    );
+
+                //Rolls back if there's a server problem
+                } catch (e) {
+                    frameEl.className = FRAME_CLASS;
+                }
             }
         }        
     }
@@ -195,6 +224,7 @@
 
             //If pictos found, shows first one
             if (numPictos) {
+                frameEl.className = frameEl.className.replace(' none', '');
                 imgEl.className = PICTO_CLASS;
                 imgEl.src = imgUrls[0];
                 pictoUrls[word] = imgUrls;

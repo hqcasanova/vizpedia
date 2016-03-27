@@ -15,6 +15,7 @@
     <a href="https://github.com/hqcasanova/vizpedia" class="forkme"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <div class="notebook">
         <form action="javascript:void(0);" class="top-bar">
+            <a role="button" href="#directions" title="More info" id="info-button" class="button">i</a>
             <fieldset class="tools">
                 <select id="select-language" name="language" title="Select language">
                     <option value="1" selected="">English</option>
@@ -27,13 +28,14 @@
                     <option value="7">Português (Brasil)</option>
                     <option value="8">Galego</option>
                 </select>
-                <a role="button" href="#" title="Erase" id="erase-button" class="button">
+                <a role="button" href="#" title="Erase all" id="erase-button" class="button">
                     <img alt="erase" src="erase.png" height="76" width="37" />
                 </a>
             </fieldset>
         </form>
-        <div id="textarea"><div class="image-card"><div class="frame"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
-        <ul class="directions">
+        <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
+        <!-- TODO: add icons for every info item when on desktop view -->
+        <ul id="directions">
             <li class="info">Type in a word followed by a space to get its image representation or symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
             <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
             <li class="info">Other words may currently have no entry in the visual dictionary for the chosen language. In such case, no pictogram will be displayed. The symbols were originally aimed at Spanish speakers and its expansion to other languages is still work in progress.</li>
