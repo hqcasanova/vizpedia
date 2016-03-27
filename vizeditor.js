@@ -62,6 +62,12 @@
     eraseEl.onclick = onDelete;
     infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
 
+    var recognition = new webkitSpeechRecognition();
+    recognition.onresult = function(event) { 
+      console.log(event) 
+    }
+    recognition.start();
+
     //TODO: Dynamically centers textarea content according to default image card's rendered size
 
     //Makes cursor appear on first image card's input area below the pictogram
