@@ -84,7 +84,7 @@ h1, h2 {
     -webkit-border-radius: 50%; 
     -moz-border-radius: 50%; 
     border-radius: 50%;
-    border: 2px solid black;
+    border: 1px solid gray;
     cursor: pointer;
 }
 .button img {
@@ -102,7 +102,8 @@ h1, h2 {
     cursor: pointer;
 }
 #textarea {
-    margin-top: 2em;
+    margin-top: 3em;
+    text-align: center;
 }
 
 /* JavaScript detection */
@@ -143,7 +144,7 @@ h1, h2 {
 /* Single-word container */
 .image-card {
     display: inline-block;
-    margin-bottom: 2em;
+    margin-bottom: 1.7em;
     padding: 0 .5em;
     text-align: center;
     font-size: 2em;
@@ -180,50 +181,41 @@ h1, h2 {
 
 /* Responsive design */
 @media only screen and (max-width: 399px) {
-  .forkme {display: none}
+    .forkme {display: none}  
 }
 @media only screen and (max-width: 639px) {
-  body {font-size: 80%}
+    body {font-size: 80%}
 }
 @media only screen and (min-width: 640px) and (max-width: 959px) {
-  body {font-size: 90%}
-}
-@media only screen and (min-width: 800px) {
-  .intro p {
-      width: 65%;
-      display: inline-block;
-  }
-  .no-js .intro p {
-      width: 100%;
-  }
+    body {font-size: 90%}
 }
 @media only screen and (min-width: 1200px) {
-  body {font-size: 110%}
+    body {font-size: 110%}
 }
 @media only screen and (min-width: 1400px) {
-  body {font-size: 120%}
+    body {font-size: 120%}
 }
 @media only screen and (min-width: 1600px) {
-  body {font-size: 130%}
+    body {font-size: 130%}
 }
 @media only screen and (min-width: 1800px) {
-  body {font-size: 140%}
+    body {font-size: 140%}
 }
 @media only screen and (min-width: 2000px) {
-  body {font-size: 150%}
+    body {font-size: 150%}
 }
 @media only screen and (min-width: 2200px) {
-  body {font-size: 160%}
+    body {font-size: 160%}
 }
 @media only screen and (min-width: 2400px) {
-  body {font-size: 170%}
+    body {font-size: 170%}
 }
 @media only screen and (min-width: 2600px) {
-  body {font-size: 180%}
+    body {font-size: 180%}
 }
 @media only screen and (min-width: 2800px) {
-  body {font-size: 190%}
+    body {font-size: 190%}
 }
 @media only screen and (min-width: 3000px) {
-  body {font-size: 200%}
+    body {font-size: 200%}
 }

@@ -19,6 +19,7 @@
     var imgCardEl;              //DOM element for container of both pictogram and text represented by it
     var newCardEl;              //DOM element used as the mold for new image cards
     var pictoUrls = {};         //Global response cache. Every entry points to a list of urls.
+    var lastCardTop = 0;        //Offset from viewport's top for last image card. Helps determine if above fold
     
     //Makes sure trimming also takes into account <br> (introduced by a bug on Firefox) and any nbsp
     //(added to avoid a bug on Firefox and IE)
@@ -61,17 +62,14 @@
     textAreaEl.onkeydown = onWordBoundary(textAreaEl);
     eraseEl.onclick = onDelete;
     infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
-
-    //TODO: Dynamically centers textarea content according to default image card's rendered size
-
-    //Makes cursor appear on first image card's input area below the pictogram
-    imgCardEl.lastChild.focus();
-
+    
     //If there's a hash fragment, takes words from it. Truncates word list if necessary.
     if (location.hash) {
         autoWrite(location.hash.trim().split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
-
-        //TODO: detect when the element is below the fold and only then cancel autofocus
+    
+    //No hash => first image card is last and only one => above the fold (except portrait) => sets focus
+    } else {
+        imgCardEl.lastChild.focus();
     }
 
     //Instead of using local anchoring, emulate it through JS to avoid polluting the hash fragment (used to maintain text state) 
@@ -91,7 +89,8 @@
     }
 
     //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
-    //with the next word. This is to maximise cache hits when inserting new words.
+    //with the next word. This is to maximise cache hits when inserting new words. Also disables any
+    //text input while a pictogram is being looked up
     function autoWrite (words, cardEl) {
         var inputEl = cardEl.lastChild;
         if (words.length) {
@@ -104,6 +103,14 @@
                 cardEl.className = CARD_CLASS;
                 autoWrite(words, cardEl.nextSibling);
             });
+
+        //Makes cursor appear on the last image card's input area below the pictogram provided such card is
+        //above the fold
+        } else {
+            window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
+            if (inputEl.getBoundingClientRect().top < window.innerHeight) {
+                inputEl.focus();
+            }
         }
     }
 
