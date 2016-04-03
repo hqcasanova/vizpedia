@@ -5,17 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
-    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/vizpedia.png" />
+    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/magglass.jpg" />
     <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
     <title>Vizpedia | A pure-JS plugin for visual word definitions</title>
     <link href="main.css" rel="stylesheet" type="text/css">
 </head>
 <body class="no-js">
-    <h1 class="title"><img alt="logo" src="vizpedia.png" height="67" width="96"/>Vizpedia<sub>beta</sub></h1>
+    <div class="cover">
+        <div class="center">
+            <h1>Vizpedia<sub>beta</sub></h1>
+            <p>Type a word, hit space... <em>Visualise it!</em></p>
+            <a role="button" href="#notebook" title="Continue" id="continue-button" class="load button"></a>
+            <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
+        </div>
+    </div>
     <a href="https://github.com/hqcasanova/vizpedia" class="forkme"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-    <div class="notebook">
+    <div class="notebook" id="notebook">
         <form action="javascript:void(0);" class="top-bar">
-            <a role="button" href="#directions" title="More info" id="info-button" class="button">i</a>
+            <a role="button" href="#directions" title="More info" id="info-button" class="button"></a>
             <fieldset class="tools">
                 <select id="select-language" name="language" title="Select language">
                     <option value="1" selected="">English</option>
@@ -28,7 +35,7 @@
                     <option value="7">Português (Brasil)</option>
                     <option value="8">Galego</option>
                 </select>
-                <a role="button" href="#" title="Erase all" id="erase-button" class="button">
+                <a role="button" href="#!" title="Erase all" id="erase-button" class="button">
                     <img alt="erase" src="erase.png" height="76" width="37" />
                 </a>
             </fieldset>
@@ -36,13 +43,12 @@
         <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
         <!-- TODO: add icons for every info item when on desktop view -->
         <ul id="directions">
-            <li class="info">Type in a word followed by a space to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
+            <li class="info">Type in a word followed by a space, tab or enter to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
             <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
             <li class="info">Other words may have no entry in the visual dictionary for the chosen language. In that case, no pictogram will be displayed. The symbols were originally aimed at Spanish speakers and its expansion to other languages is still work in progress.</li>
             <li class="info">The page's address is updated as words are added. Using that address, you can share the page with the typed words included. They will be added automatically.</li>
             <li class="info">Use the erase button on the top right to clear all text and reset the address bar.</li> 
         </ul>
-        <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
     </div>
     <script>
         document.body.className = "";       //JavaScript detection

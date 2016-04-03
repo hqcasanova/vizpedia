@@ -12,6 +12,9 @@ body, div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
 img[src=''] {
     visibility: hidden;
 }
+html, body {
+    height: 100%;
+}
 body {
     font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
     font-size: 100%;
@@ -23,20 +26,59 @@ h1, h2 {
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
 }
 
-/* Header */
-.title {
-    background: black;
+/* Cover */
+.cover {
+    height: 100%;
+    text-align: center;
     color: white;
-    padding: .3em;
-    font-size: 3.2em;
+    background: black url('magglass.jpg') no-repeat center;
+    background-size: contain;
 }
-.title img {
+.cover:before {
+    content: '';
     display: inline-block;
-    margin-right: .2em;
+    height: 100%;
     vertical-align: middle;
 }
-.title sub {
+.center {
+    display: inline-block;
+    margin-left: -.5em;
+    vertical-align: middle;
+}
+.center h1 {
+    font-size: 5em;
+}
+.center sub {
     font-size: .4em;
+}
+.center p {
+    margin: 7em 1.2em 1.2em;
+    font-size: 1.3em;
+    background: black;  
+    background: rgba(0,0,0,.5);   
+}
+#continue-button {
+    line-height: 1.5em;
+    text-decoration: none;
+    border-color: rgb(250, 250, 250);
+}
+#continue-button:before {
+    content: '';
+    display: inline-block;
+    width: 0; 
+    height: 0; 
+    border-left: .6em solid transparent;
+    border-right: .6em solid transparent;
+    border-top: .6em solid rgb(250, 250, 250);
+}
+#continue-button.load:before {
+    display: none;
+}
+#continue-button.load {
+    border-color: transparent;
+}
+.loaded #continue-button {
+    opacity: 1;
 }
 .forkme {
     position: absolute; 
@@ -63,6 +105,12 @@ h1, h2 {
 .info a {
     color: white;
 }
+#info-button {
+    color: white;
+}
+#info-button:before {
+    content: 'i';
+}
 
 /* Text area controls */
 .top-bar {
@@ -72,7 +120,7 @@ h1, h2 {
 .tools {
     float: right;
 }
-.button {
+.button, .center:after {
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
@@ -84,11 +132,11 @@ h1, h2 {
     -webkit-border-radius: 50%; 
     -moz-border-radius: 50%; 
     border-radius: 50%;
-    border: 1px solid gray;
+    border: 3px solid black;
     cursor: pointer;
 }
 .button img {
-    height: 100%;
+    height: 70%;
     vertical-align: middle;
 }
 #info-button {
@@ -107,7 +155,7 @@ h1, h2 {
 }
 
 /* JavaScript detection */
-.no-js #textarea, .no-js .toolbar {
+.no-js #notebook {
     display: none;
 }
 .no-js .notice {
@@ -117,7 +165,7 @@ h1, h2 {
     display: none;
     text-align: center;
     font-size: 1.3em;
-    color: black;
+    color: white;
     text-decoration: none;
 }
 .notice:before {
@@ -128,11 +176,11 @@ h1, h2 {
     text-align: center;
     line-height: 1.2em;
     vertical-align: middle;
-    font-size: 3em;
+    font-size: 2em;
     font-weight: bold;
-    color: gray;
+    color: white;
     opacity: .7;
-    border: 3px solid gray;
+    border: 3px solid white;
     -moz-border-radius: 1.2em;
     -webkit-border-radius: 1.2em;
     border-radius: 1.2em;
@@ -180,9 +228,6 @@ h1, h2 {
 }
 
 /* Responsive design */
-@media only screen and (max-width: 399px) {
-    .forkme {display: none}  
-}
 @media only screen and (max-width: 639px) {
     body {font-size: 80%}
 }

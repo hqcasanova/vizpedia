@@ -12,14 +12,14 @@
     var WORD_HASH_SEPARATOR = '+';
     var WORD_HASH_LIMIT = '20';
 
+    var continueEl;             //DOM element for continue button
     var infoEl;                 //DOM element for info button
     var eraseEl;                //DOM element for erase button
     var langSelEl;              //DOM element needed for referencing the chosen language on keypress (see 'onWordBoundary' below)
     var textAreaEl;             //DOM element for block of free text, the image cards' container    
     var imgCardEl;              //DOM element for container of both pictogram and text represented by it
     var newCardEl;              //DOM element used as the mold for new image cards
-    var pictoUrls = {};         //Global response cache. Every entry points to a list of urls.
-    var lastCardTop = 0;        //Offset from viewport's top for last image card. Helps determine if above fold
+    var pictoUrls;              //Global response cache. Every entry points to a list of urls.
     
     //Makes sure trimming also takes into account <br> (introduced by a bug on Firefox) and any nbsp
     //(added to avoid a bug on Firefox and IE)
@@ -45,7 +45,11 @@
         })();
     }
 
+    //Normalises innerHeight (IE8's equivalent is clientHeight)
+    window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
+
     //Caches DOM elements
+    continueEl = document.getElementById('continue-button');
     infoEl = document.getElementById('info-button');
     eraseEl = document.getElementById('erase-button');
     langSelEl = document.getElementById('select-language');   
@@ -60,24 +64,90 @@
     //Assigns event handlers
     imgCardEl.onclick = focusOnClick(imgCardEl);
     textAreaEl.onkeydown = onWordBoundary(textAreaEl);
-    eraseEl.onclick = onDelete;
+    eraseEl.onclick = eraseAll;
+    continueEl.onclick = goTo(document.getElementById(continueEl.href.split('#')[1]));
     infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
+    window.onload = stopSpinner;
+
+    initialise();
     
-    //If there's a hash fragment, takes words from it. Truncates word list if necessary.
-    if (location.hash) {
-        autoWrite(location.hash.trim().split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
-    
-    //No hash => first image card is last and only one => above the fold (except portrait) => sets focus
-    } else {
-        imgCardEl.lastChild.focus();
+    //Sets up text contents.
+    function initialise () {
+        var hash = location.hash.trim();
+
+        //Detects and sets up localStorage in order to minimise requests.
+        if (isLocalStorage()) {
+            pictoUrls = getUrls('pictoUrls');
+            window.onbeforeunload = flushUrls('pictoUrls', pictoUrls);
+        } else {
+            pictoUrls = {};
+        }
+
+        //If there's a hash fragment, takes words from it. Truncates word list if necessary.
+        if (hash.length) {
+            autoWrite(hash.split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
+        
+        //If the hash fragment is empty, the first image card is last and only one => sets 'primary' focus.
+        } else {
+            deferredFocus(imgCardEl.lastChild);
+        }
     }
 
-    //Instead of using local anchoring, emulate it through JS to avoid polluting the hash fragment (used to maintain text state) 
+    //Detection of locatStorage, taking into account buggy implementations that prevent setting and/or
+    //removing items when on private browsing, for example.
+    function isLocalStorage () {
+        var supported = typeof window.localStorage !== 'undefined';
+        if (supported) {
+            try {
+                localStorage.setItem('test_support', 'test_support');
+                localStorage.removeItem('test_support');
+            } catch (e) {
+                supported = false;
+            }
+        }
+        return supported;
+    }
+
+    //Retrieves all pictogram URLs currently on localStorage
+    function getUrls (key) {
+        return JSON.parse(localStorage.getItem(key)) || {};
+    }
+
+    //Saves all cached pictogram URLs to localStorage. Blank URLs are not persisted (entries without
+    //a pictogram can be updated in the future).
+    function flushUrls (key, urlObj) {
+        return function () {
+            var word;
+
+            for (word in urlObj) {
+                if (!urlObj[word]) {
+                    delete urlObj[word];
+                }
+            }
+            localStorage.setItem(key, JSON.stringify(urlObj));
+        }
+    }
+
+    //Sets focus on input area on clicking the image card
+    function focusOnClick (currentTarget) {       
+        return function () {
+            currentTarget.lastChild.focus();
+        }
+    }
+
+    //Wipes out all the existing image cards and adds a blank one.
+    function eraseAll (event) { 
+        textAreaEl.innerHTML = '';
+        newCard().lastChild.focus();
+    }
+
+    //Instead of using local anchoring, emulate it through JS to avoid polluting the hash fragment 
+    //(used to maintain text state) 
     function goTo (targetEl) {
         return function (event) {
             event = event || window.event;
 
-            //Prevents change of hash fragment and scrolling
+            //Cancels default behaviour: change of hash fragment and scrolling
             if (event.preventDefault) {
                 event.preventDefault();
             } else {
@@ -86,6 +156,11 @@
 
             targetEl.scrollIntoView();
         }
+    }
+
+    //Removes loading feedback once all page resources are loaded.
+    function stopSpinner () {
+        continueEl.className = continueEl.className.replace(LOAD_CLASS, '');
     }
 
     //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
@@ -103,27 +178,8 @@
                 cardEl.className = CARD_CLASS;
                 autoWrite(words, cardEl.nextSibling);
             });
-
-        //Makes cursor appear on the last image card's input area below the pictogram provided such card is
-        //above the fold
         } else {
-            window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
-            if (inputEl.getBoundingClientRect().top < window.innerHeight) {
-                inputEl.focus();
-            }
-        }
-    }
-
-    //Wipes out all the existing image cards and adds a blank one.
-    function onDelete () { 
-        textAreaEl.innerHTML = '';
-        newCard().lastChild.focus();
-    }
-
-    //Sets focus on input area on clicking the image card
-    function focusOnClick (currentTarget) {       
-        return function () {
-            currentTarget.lastChild.focus();
+            deferredFocus(inputEl);
         }
     }
 
@@ -150,7 +206,7 @@
                 location.hash = currentTarget.textContent.trim().replace(/\s+/g, '+');
 
                 //Sets focus on next image card
-                setFocus(target.parentElement.nextSibling);
+                setFocusNext(target.parentElement.nextSibling);
             }
         }
     }
@@ -165,9 +221,23 @@
         return textAreaEl.lastChild;
     }
 
+    //Sets focus on last image card once it climbs above the fold and only for once
+    function deferredFocus (inputEl) {
+        if (inputEl.getBoundingClientRect().bottom > window.innerHeight) {
+            document.body.onscroll = function () {
+                if (inputEl.getBoundingClientRect().bottom < window.innerHeight) {
+                    inputEl.focus();
+                    document.body.onscroll = null;
+                }
+            }
+        } else {
+            inputEl.focus();
+        }
+    }
+
     //Sets focus on next card element's input area. If there's no sibling card, appends a new empty 
     //one right next to the current.
-    function setFocus (nextCardEl) {
+    function setFocusNext (nextCardEl) {
         if (nextCardEl) {
             nextCardEl.lastChild.focus();
         } else {
@@ -228,6 +298,9 @@
             frameEl.className = FRAME_CLASS;
             frameEl.onclick = function () {};
             imgEl.src = '';
+
+            //Prevents making a additional requests for a words without an entry
+            pictoUrls[word] = '';
 
             //If pictos found, shows first one
             if (numPictos) {
