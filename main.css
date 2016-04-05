@@ -12,8 +12,9 @@ body, div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
 img[src=''] {
     visibility: hidden;
 }
-html, body {
+html, body, .cover {
     height: 100%;
+    background: black;      /* prevents flash from white to black on mobile */
 }
 body {
     font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
@@ -27,18 +28,23 @@ h1, h2 {
 }
 
 /* Cover */
-.cover {
-    height: 100%;
-    text-align: center;
-    color: white;
-    background: black url('magglass.jpg') no-repeat center;
-    background-size: contain;
+.forkme {
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    border-style: none;
 }
 .cover:before {
     content: '';
     display: inline-block;
     height: 100%;
     vertical-align: middle;
+}
+.cover {
+    text-align: center;
+    color: white;
+    background: black url('magglass.jpg') no-repeat center;
+    background-size: contain;
 }
 .center {
     display: inline-block;
@@ -79,12 +85,6 @@ h1, h2 {
 }
 .loaded #continue-button {
     opacity: 1;
-}
-.forkme {
-    position: absolute; 
-    top: 0; 
-    right: 0; 
-    border-style: none;
 }
 
 /* Text area */
