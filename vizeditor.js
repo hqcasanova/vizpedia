@@ -3,7 +3,6 @@
 
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
     var WORD_KEYS = '|9|13|32|';        //keycodes considered word boundary markers: tab, enter, space
-    var SPACE_HTML = '&nbsp;';          //HTML-encoded character used as default word-boundary marker
     var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
     var PICTO_CLASS = 'picto';          //pictogram's img class
@@ -26,24 +25,6 @@
     String.prototype.trim = function () {
         return this.replace(TRIM_REGEX, '');
     };
-
-    //IE8 Polyfill for textContent functionality
-    if (Object.defineProperty 
-        && Object.getOwnPropertyDescriptor 
-        && Object.getOwnPropertyDescriptor(Element.prototype, "textContent") 
-        && !Object.getOwnPropertyDescriptor(Element.prototype, "textContent").get) {
-        (function() {
-            var innerText = Object.getOwnPropertyDescriptor(Element.prototype, "innerText");
-            Object.defineProperty(Element.prototype, "textContent", {
-                get: function() {
-                    return innerText.get.call(this);
-                },
-                set: function(s) {
-                    return innerText.set.call(this, s);
-                }
-            });
-        })();
-    }
 
     //Normalises innerHeight (IE8's equivalent is clientHeight)
     window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -203,12 +184,32 @@
                 addPictos(target);
 
                 //Updates URL fragment with whatever text has been written so far
-                location.hash = currentTarget.textContent.trim().replace(/\s+/g, '+');
+                location.hash = getTextHash();
 
                 //Sets focus on next image card
                 setFocusNext(target.parentElement.nextSibling);
             }
         }
+    }
+
+    //Avoids using textContent (not supported on IE8) and sanitises each input area's text 
+    //before adding it to the hash (needed as a workaround for Firefox's bug with innerHTML and
+    //contentEditable; it sometimes appends a <br/>).
+    function getTextHash () {
+        var cards = textarea.children;
+        var numCards = cards.length;
+        var text = [];
+        var word = '';
+        var i = 0;
+
+        for (i; i < numCards; i++) {
+            word = cards[i].lastChild.innerHTML;
+            if (word.trim()) {
+                text.push(word);
+            }
+        }
+
+        return text.join(WORD_HASH_SEPARATOR);
     }
 
     //Appends a new image card to the text area, complete with event handlers. Uses the global
@@ -222,14 +223,16 @@
     }
 
     //Sets focus on last image card once it climbs above the fold and only for once
-    function deferredFocus (inputEl) {
+    function deferredFocus (inputEl) { 
+        var interval;
+
         if (inputEl.getBoundingClientRect().bottom > window.innerHeight) {
-            document.body.onscroll = function () {
-                if (inputEl.getBoundingClientRect().bottom < window.innerHeight) {
+            interval = window.setInterval(function () {
+                if (inputEl.getBoundingClientRect().bottom <= window.innerHeight) {
                     inputEl.focus();
-                    document.body.onscroll = null;
+                    window.clearInterval(interval); 
                 }
-            }
+            }, 300);
         } else {
             inputEl.focus();
         }
@@ -254,9 +257,6 @@
         callback = callback || function () {};
 
         if (word.length) {
-
-            //Normalises input's content to ensure later on there's at least one space separating words
-            activeInput.innerHTML = activeInput.innerHTML.replace(SPACE_HTML, '') + SPACE_HTML;
 
             //If not cached, fetches the urls of all images corresponding to the term just typed in (if any)
             activeInput.parentElement.title = word;
