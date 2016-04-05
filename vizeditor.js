@@ -171,6 +171,7 @@
 
             var target = event.target || event.srcElement;
 
+            //TODO: support for backspace and arrows
             if ((target && target.className == 'caption') && (WORD_KEYS.indexOf('|' + event.keyCode + '|') != -1)) {
                 
                 //Prevents any caret movements
@@ -203,8 +204,8 @@
         var i = 0;
 
         for (i; i < numCards; i++) {
-            word = cards[i].lastChild.innerHTML;
-            if (word.trim()) {
+            word = cards[i].lastChild.innerHTML.trim();
+            if (word) {
                 text.push(word);
             }
         }
