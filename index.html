@@ -4,21 +4,39 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="A responsive JS plugin for visual word definitions" />
-    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/magglass.jpg" />
-    <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
     <title>Vizpedia | A pure-JS plugin for visual word definitions</title>
-    <link href="main.css" rel="stylesheet" type="text/css">
+    <style>
+        html, body, .cover {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {background: black url('demo.gif') no-repeat center}
+        .cover {display: none}
+    </style>
+    <script>
+        var introGifEl = new Image();
+        introGifEl.onload = function () {
+           setTimeout(function () {
+                document.body.firstChild.className += ' reveal';
+           }, 6000);
+        };
+        introGifEl.src = 'demo.gif';
+    </script>
+    <link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="main.css"></noscript>
+    <meta name="description" content="A responsive JS plugin for visual word definitions" />
+    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/demo.gif" />
+    <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
 </head>
-<body class="no-js">
-    <div class="cover">
-        <div class="center">
-            <h1>Vizpedia<sub>beta</sub></h1>
-            <p>Type a word, hit space... <em>Visualise it!</em></p>
-            <a role="button" href="#notebook" title="Continue" id="continue-button" class="load button"></a>
-            <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
-        </div>
-    </div>
+<body class="no-js"><div class="cover">
+    <div class="center">
+        <h1>Vizpedia<sub>beta</sub></h1>
+        <p>Type a <b>word</b>, hit <b>space</b>... <em>Visualise it!</em></p>
+        <a role="button" href="#notebook" title="Continue" id="continue-button" class="load button"></a>
+        <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
+    </div></div>
+
     <a href="https://github.com/hqcasanova/vizpedia" class="forkme"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
     <div class="notebook" id="notebook">
         <form action="javascript:void(0);" class="top-bar">
@@ -41,7 +59,6 @@
             </fieldset>
         </form>
         <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
-        <!-- TODO: add icons for every info item when on desktop view -->
         <ul id="directions">
             <li class="info">Type in a word followed by a space, tab or enter to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
             <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
@@ -52,8 +69,9 @@
     </div>
     <script>
         document.body.className = "";       //JavaScript detection
+
     </script>
-    <script src="http://rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js"></script>
+    <script src="http://rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js" async></script>
     <script src="vizeditor.js"></script>
 </body>
 </html>

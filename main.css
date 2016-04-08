@@ -1,5 +1,5 @@
 /* Reset */
-body, div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
+div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
     margin: 0;
     padding: 0;
     border: 0;
@@ -12,10 +12,6 @@ body, div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
 img[src=''] {
     visibility: hidden;
 }
-html, body, .cover {
-    height: 100%;
-    background: black;      /* prevents flash from white to black on mobile */
-}
 body {
     font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
     font-size: 100%;
@@ -25,6 +21,44 @@ body {
 h1, h2 {
     font-weight: normal;
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 639px) {
+    body {font-size: 80%}
+}
+@media only screen and (min-width: 640px) and (max-width: 959px) {
+    body {font-size: 90%}
+}
+@media only screen and (min-width: 1200px) {
+    body {font-size: 110%}
+}
+@media only screen and (min-width: 1400px) {
+    body {font-size: 120%}
+}
+@media only screen and (min-width: 1600px) {
+    body {font-size: 130%}
+}
+@media only screen and (min-width: 1800px) {
+    body {font-size: 140%}
+}
+@media only screen and (min-width: 2000px) {
+    body {font-size: 150%}
+}
+@media only screen and (min-width: 2200px) {
+    body {font-size: 160%}
+}
+@media only screen and (min-width: 2400px) {
+    body {font-size: 170%}
+}
+@media only screen and (min-width: 2600px) {
+    body {font-size: 180%}
+}
+@media only screen and (min-width: 2800px) {
+    body {font-size: 190%}
+}
+@media only screen and (min-width: 3000px) {
+    body {font-size: 200%}
 }
 
 /* Cover */
@@ -41,15 +75,20 @@ h1, h2 {
     vertical-align: middle;
 }
 .cover {
+    display: block;
     text-align: center;
     color: white;
-    background: black url('magglass.jpg') no-repeat center;
-    background-size: contain;
+    opacity: 0;
+    background: black url('bookside.jpg') no-repeat center;
+    transition: opacity 3s;
 }
 .center {
     display: inline-block;
     margin-left: -.5em;
     vertical-align: middle;
+}
+.reveal {
+    opacity: 1;
 }
 .center h1 {
     font-size: 5em;
@@ -225,42 +264,4 @@ h1, h2 {
     line-height: 1.5em;
     font-weight: 300;
     color: rgb(110, 110, 110);
-}
-
-/* Responsive design */
-@media only screen and (max-width: 639px) {
-    body {font-size: 80%}
-}
-@media only screen and (min-width: 640px) and (max-width: 959px) {
-    body {font-size: 90%}
-}
-@media only screen and (min-width: 1200px) {
-    body {font-size: 110%}
-}
-@media only screen and (min-width: 1400px) {
-    body {font-size: 120%}
-}
-@media only screen and (min-width: 1600px) {
-    body {font-size: 130%}
-}
-@media only screen and (min-width: 1800px) {
-    body {font-size: 140%}
-}
-@media only screen and (min-width: 2000px) {
-    body {font-size: 150%}
-}
-@media only screen and (min-width: 2200px) {
-    body {font-size: 160%}
-}
-@media only screen and (min-width: 2400px) {
-    body {font-size: 170%}
-}
-@media only screen and (min-width: 2600px) {
-    body {font-size: 180%}
-}
-@media only screen and (min-width: 2800px) {
-    body {font-size: 190%}
-}
-@media only screen and (min-width: 3000px) {
-    body {font-size: 200%}
 }
