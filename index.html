@@ -12,6 +12,272 @@
             height: 100%;
         }
         body {background: black url('demo.gif') no-repeat center}
+        /* Reset */
+div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    list-style: none;
+    font: inherit;
+}
+
+/* Custom defaults */
+img[src=''] {
+    visibility: hidden;
+}
+body {
+    font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    font-size: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+h1, h2 {
+    font-weight: normal;
+    font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
+}
+
+/* Responsive design */
+@media only screen and (max-width: 639px) {
+    body {font-size: 80%}
+}
+@media only screen and (min-width: 640px) and (max-width: 959px) {
+    body {font-size: 90%}
+}
+@media only screen and (min-width: 1200px) {
+    body {font-size: 110%}
+}
+@media only screen and (min-width: 1400px) {
+    body {font-size: 120%}
+}
+@media only screen and (min-width: 1600px) {
+    body {font-size: 130%}
+}
+@media only screen and (min-width: 1800px) {
+    body {font-size: 140%}
+}
+@media only screen and (min-width: 2000px) {
+    body {font-size: 150%}
+}
+@media only screen and (min-width: 2200px) {
+    body {font-size: 160%}
+}
+@media only screen and (min-width: 2400px) {
+    body {font-size: 170%}
+}
+@media only screen and (min-width: 2600px) {
+    body {font-size: 180%}
+}
+@media only screen and (min-width: 2800px) {
+    body {font-size: 190%}
+}
+@media only screen and (min-width: 3000px) {
+    body {font-size: 200%}
+}
+
+/* Cover */
+.forkme {
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    border-style: none;
+}
+.cover:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+.cover {
+    display: block;
+    text-align: center;
+    color: white;
+    background: black url('bookside.jpg') no-repeat center;
+    transition: opacity 3s;
+}
+.center {
+    display: inline-block;
+    margin-left: -.5em;
+    vertical-align: middle;
+}
+.reveal {
+    opacity: 1 !important;
+}
+.center h1 {
+    font-size: 5em;
+}
+.center sub {
+    font-size: .4em;
+}
+.center p {
+    margin: 7em 1.2em 1.2em;
+    font-size: 1.3em;
+    background: black;  
+    background: rgba(0,0,0,.5);   
+}
+#continue-button {
+    line-height: 1.5em;
+    text-decoration: none;
+    border-color: rgb(250, 250, 250);
+}
+#continue-button:before {
+    content: '';
+    display: inline-block;
+    width: 0; 
+    height: 0; 
+    border-left: .6em solid transparent;
+    border-right: .6em solid transparent;
+    border-top: .6em solid rgb(250, 250, 250);
+}
+#continue-button.load:before {
+    display: none;
+}
+#continue-button.load {
+    border-color: transparent;
+}
+.loaded #continue-button {
+    opacity: 1;
+}
+
+/* Text area */
+.notebook {
+    padding-top: 65px;
+    background: rgb(250, 250, 250) url('spiral.png') repeat-x left top;
+}
+#directions {
+    overflow: hidden;
+    background: gray;
+}
+.info {
+    margin: 1.5em;
+    line-height: 1.5em;
+    font-size: 1.3em;
+    color: white;
+}
+.info a {
+    color: white;
+}
+#info-button {
+    color: white;
+}
+#info-button:before {
+    content: 'i';
+}
+
+/* Text area controls */
+.top-bar {
+    overflow: hidden;
+    padding: .3em .5em;
+}
+.tools {
+    float: right;
+}
+.button, .center:after {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    margin: 0 .25em;
+    padding: .3em;
+    font-size: 25px;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-border-radius: 50%; 
+    -moz-border-radius: 50%; 
+    border-radius: 50%;
+    border: 3px solid black;
+    cursor: pointer;
+}
+.button img {
+    height: 70%;
+    vertical-align: middle;
+}
+#info-button {
+    line-height: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+#select-language {
+    font-size: 16px;
+    cursor: pointer;
+}
+#textarea {
+    margin-top: 3em;
+    text-align: center;
+}
+
+/* JavaScript detection */
+.no-js #notebook {
+    display: none;
+}
+.no-js .notice {
+    display: block;
+}
+.notice {                                   
+    display: none;
+    text-align: center;
+    font-size: 1.3em;
+    color: white;
+    text-decoration: none;
+}
+.notice:before {
+    content: "!"; 
+    display: inline-block;
+    width: 1.2em;
+    margin-right: .3em;
+    text-align: center;
+    line-height: 1.2em;
+    vertical-align: middle;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+    opacity: .7;
+    border: 3px solid white;
+    -moz-border-radius: 1.2em;
+    -webkit-border-radius: 1.2em;
+    border-radius: 1.2em;
+}
+.notice span {
+    text-decoration: underline;
+}
+
+/* Single-word container */
+.image-card {
+    display: inline-block;
+    margin-bottom: 1.7em;
+    padding: 0 .5em;
+    text-align: center;
+    font-size: 2em;
+    line-height: 0;
+    border-bottom: 1px solid rgb(211, 211, 211);
+}
+.frame {
+    min-height: 5em;
+    min-width: 5em;
+}
+.none:hover {
+    background: rgb(211, 211, 211);
+}
+.multiple {
+    cursor: pointer;
+}
+.load {
+    background: transparent url('data:image/gif;base64,R0lGODlhKwALAMIEAP///wAAAIKCggAAABRaZhRaZhRaZhRaZiH/C05FVFNDQVBFMi4wAwEAAAAh+QQJMgADACwAAAAAKwALAAADNDiyzPNQtRbhpHfWTCP/mgduYEl+Z8mlGauG1ii+7bzadBejeL64sIfvAtQJR7yioHJsJQAAIfkECTIAAwAsAAAAACsACwAAAz84sMzzcIhJaYQ1q8bBzeAHVh0njtOJlo06uiDrRKhF14K8wNpd6x4fikfSEW0YHPCYEo6WzlBUI7s8albJMAEAIfkECTIAAwAsAAAAACsACwAAAz84sszzcIBJaYQtq6xj/dPFjaRwgZ9YrsuJWhHLui+gyiT93jino7xe4wcKCluemi127ECUS8xqM7o8alaqLwEAIfkEATIAAwAsAAAAACsACwAAA0I4sszzULUWIbgYy0kjn1UmXl8HlU40iuhStUK4YvDbyjNQe7ea671T8PEDomxHX24nTFp+zEd0UNxwKtISljobJAAAOw==') no-repeat center center;
+}
+.disabled {
+    opacity: .3;
+}
+.picto {
+    width: auto;
+    height: 5em;
+    line-height: 0;
+}
+.caption {
+    margin: auto;
+    line-height: 1.5em;
+    font-weight: 300;
+    color: rgb(110, 110, 110);
+}
     </style>
     <script>
         var introGifEl = new Image();
@@ -22,8 +288,8 @@
         };
         introGifEl.src = 'demo.gif';
     </script>
-    <link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="main.css"></noscript>
+    <!--link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="main.css"></noscript-->
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
     <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/demo.gif" />
     <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
