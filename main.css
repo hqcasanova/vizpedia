@@ -145,6 +145,7 @@ h1, h2 {
 }
 
 /* Text area controls */
+.top-bar, .top-bar * {border: 1px solid red}
 .top-bar {
     overflow: hidden;
     padding: .3em .5em;
