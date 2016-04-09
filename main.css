@@ -1,5 +1,5 @@
 /* Reset */
-div, img, form, label, option, input, a, h1, h2, p, fieldset, ul, li {
+div, img, form, label, option, input, a, h1, h2, p, ul, li {
     margin: 0;
     padding: 0;
     border: 0;
@@ -124,6 +124,10 @@ h1, h2 {
     padding-top: 65px;
     background: rgb(250, 250, 250) url('spiral.png') repeat-x left top;
 }
+#textarea {
+    margin-top: 3em;
+    text-align: center;
+}
 #directions {
     overflow: hidden;
     background: gray;
@@ -137,22 +141,12 @@ h1, h2 {
 .info a {
     color: white;
 }
-#info-button {
-    color: white;
-}
-#info-button:before {
-    content: 'i';
-}
 
 /* Text area controls */
-.top-bar, .top-bar * {border: 1px solid red}
 .top-bar {
     overflow: hidden;
     padding: .3em .5em;
-}
-.tools {
-    float: right;
-    display: inline-block;  /* Some mobile browsers still render it as a block after floating */
+    text-align: right;
 }
 .button, .center:after {
     display: inline-block;
@@ -173,19 +167,19 @@ h1, h2 {
     height: 70%;
     vertical-align: middle;
 }
+#select-language {
+    font-size: 16px;
+    cursor: pointer;
+}
 #info-button {
+    float: left;
     line-height: 1.5em;
     font-weight: bold;
     text-decoration: none;
     color: black;
 }
-#select-language {
-    font-size: 16px;
-    cursor: pointer;
-}
-#textarea {
-    margin-top: 3em;
-    text-align: center;
+#info-button:before {
+    content: 'i';
 }
 
 /* JavaScript detection */
