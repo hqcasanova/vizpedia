@@ -151,6 +151,7 @@ h1, h2 {
 }
 .tools {
     float: right;
+    display: inline-block;  /* Some mobile browsers still render it as a block after floating */
 }
 .button, .center:after {
     display: inline-block;
