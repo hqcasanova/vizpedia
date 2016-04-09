@@ -26,6 +26,26 @@
             margin-left: -142px;
             z-index: -1;
         }
+        .cover {
+            text-align: center;
+            color: white;
+            background: black url('bookside.jpg') no-repeat center;
+            transition: opacity 3s;
+        }
+        .cover:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+        .reveal {
+            opacity: 1 !important;
+        }
+        .center {
+            display: inline-block;
+            margin-left: -.5em;
+            vertical-align: middle;
+        }
     </style>
     <script>
         var introGifEl = new Image();
@@ -39,7 +59,7 @@
     <link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="main.css"></noscript>
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
-    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/demo.gif" />
+    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/bookside.jpg" />
     <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
 </head>
 <body class="no-js">
