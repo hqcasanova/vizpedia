@@ -62,12 +62,6 @@ h1, h2 {
 }
 
 /* Cover */
-.forkme {
-    position: absolute; 
-    top: 0; 
-    right: 0; 
-    border-style: none;
-}
 .cover:before {
     content: '';
     display: inline-block;
