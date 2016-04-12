@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vizpedia | A pure-JS plugin for visual word definitions</title>
+    <title>Vizpedia | A pure-JS visual dictionary plugin</title>
     <style>
         html, body, .cover {
             margin: 0;
@@ -60,7 +60,7 @@
     <noscript><link rel="stylesheet" href="main.css"></noscript>
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
     <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/bookside.jpg" />
-    <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for users with learning difficulties." />
+    <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for Spanish users with learning difficulties." />
 </head>
 <body class="no-js">
     <img class="intro" alt="" src="demo.gif" width="284" height="314"/>
@@ -92,7 +92,7 @@
                 <img alt="erase" src="erase.png" height="76" width="37" />
             </a>
         </form>
-        <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">&nbsp;</div></div></div>
+        <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">type here</div></div></div>
         <ul id="directions">
             <li class="info">Type in a word followed by a space, tab or enter to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
             <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
@@ -105,7 +105,6 @@
         document.body.className = "";       //JavaScript detection
 
     </script>
-    <script src="http://rawgit.com/hqcasanova/vizpedia/master/vizpedia.min.js" async></script>
     <script src="vizeditor.js"></script>
 </body>
 </html>

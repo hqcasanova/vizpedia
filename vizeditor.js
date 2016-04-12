@@ -2,6 +2,9 @@
 !function(e){"use strict";var n=function(n,t,o){function i(e){return a.body?e():void setTimeout(function(){i(e)})}function r(){l.addEventListener&&l.removeEventListener("load",r),l.media=o||"all"}var d,a=e.document,l=a.createElement("link");if(t)d=t;else{var s=(a.body||a.getElementsByTagName("head")[0]).childNodes;d=s[s.length-1]}var f=a.styleSheets;l.rel="stylesheet",l.href=n,l.media="only x",i(function(){d.parentNode.insertBefore(l,t?d:d.nextSibling)});var u=function(e){for(var n=l.href,t=f.length;t--;)if(f[t].href===n)return e();setTimeout(function(){u(e)})};return l.addEventListener&&l.addEventListener("load",r),l.onloadcssdefined=u,u(r),l};"undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this);
 !function(t){if(t.loadCSS){var e=loadCSS.relpreload={};if(e.support=function(){try{return t.document.createElement("link").relList.supports("preload")}catch(e){return!1}},e.poly=function(){for(var e=t.document.getElementsByTagName("link"),n=0;n<e.length;n++){var r=e[n];"preload"===r.rel&&"style"===r.getAttribute("as")&&(t.loadCSS(r.href,r),r.rel=null)}},!e.support()){e.poly();var n=t.setInterval(e.poly,300);t.addEventListener&&t.addEventListener("load",function(){t.clearInterval(n)}),t.attachEvent&&t.attachEvent("onload",function(){t.clearInterval(n)})}}}(this);
 
+//Vizpedia service plugin
+!function(t,i,n){"use strict";function e(t,i){var n=new XMLHttpRequest;return"withCredentials"in n?n.open(t,i,!0):"undefined"!=typeof XDomainRequest?(n=new XDomainRequest,n.open(t,i)):n=null,n}Array.isArray||(Array.isArray=function(t){return"[object Array]"===Object.prototype.toString.call(t)});var a=function(t,i,e,a){t===n&&(this.language=1),this.url=i||"http://www.hqcasanova.com/vizpedia",this.imgType=e||"png",this.callback=a||function(t){console.log(t)}};a.prototype={get:function(t,i,a,r){var s,o=this;if(i===n&&(i=this.language),s=e("GET",this.url+"/"+t+"/"+i),a=a||this.callback,r=r||this.callback,!s)throw new Error("CORS not supported");s.onreadystatechange=function(){4===this.readyState&&(this.status>=200&&this.status<400?a.call(o,JSON.parse(this.responseText),this):404===this.status?a.call(o,[],this):r.call(o,[],this))},s.send(),s=null},getUrls:function(t,i,n){function e(t){var i=[],e=0,a=0;if(!Array.isArray(t))throw new Error("Invalid response format");for(e=t.length,a;e>a;a++)i[a]=this.url+"/"+t[a].charAt(0)+"/"+t[a]+"."+this.imgType;n.call(this,i)}n=n||this.callback,this.get(t,i,e,n)}},t.Vizpedia=new a}(window,document);
+
 (function () {
     'use strict';
 
@@ -12,8 +15,8 @@
     var PICTO_CLASS = 'picto';          //pictogram's img class
     var LOAD_CLASS = 'load';            //class for loading spinner
     var MULTIPICTO_CLASS = 'multiple';  //class for pictogram container if multiple pictos found
-    var WORD_HASH_SEPARATOR = '+';
-    var WORD_HASH_LIMIT = '20';
+    var HASH_WORD_SEPARATOR = '+';
+    var HASH_WORD_LIMIT = '20';
 
     var continueEl;             //DOM element for continue button
     var infoEl;                 //DOM element for info button
@@ -33,32 +36,39 @@
     //Normalises innerHeight (IE8's equivalent is clientHeight)
     window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
 
-    //Caches DOM elements
-    continueEl = document.getElementById('continue-button');
-    infoEl = document.getElementById('info-button');
-    eraseEl = document.getElementById('erase-button');
-    langSelEl = document.getElementById('select-language');   
-    textAreaEl = document.getElementById('textarea');
-    
-    //Sets up the 'mold' for new image cards using the current (and only) image card
-    imgCardEl = textAreaEl.firstChild;
-    CARD_CLASS = imgCardEl.className;
-    FRAME_CLASS = imgCardEl.firstChild.className;
-    newCardEl = imgCardEl.cloneNode(true);
-
-    //Assigns event handlers
-    imgCardEl.onclick = focusOnClick(imgCardEl);
-    textAreaEl.onkeydown = onWordBoundary(textAreaEl);
-    eraseEl.onclick = eraseAll;
-    continueEl.onclick = goTo(document.getElementById(continueEl.href.split('#')[1]));
-    infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
-    window.onload = stopSpinner;
-
     initialise();
     
-    //Sets up text contents.
+    //Sets up environment.
     function initialise () {
-        var hash = location.hash.trim();
+
+        //Caches DOM elements
+        continueEl = document.getElementById('continue-button');
+        infoEl = document.getElementById('info-button');
+        eraseEl = document.getElementById('erase-button');
+        langSelEl = document.getElementById('select-language');   
+        textAreaEl = document.getElementById('textarea');
+        
+        //Sets up the 'mold' for new image cards using the current (and only) image card
+        imgCardEl = textAreaEl.firstChild;
+        CARD_CLASS = imgCardEl.className;
+        FRAME_CLASS = imgCardEl.firstChild.className;
+        newCardEl = imgCardEl.cloneNode(true);
+        newCardEl.lastChild.innerHTML = '';     //removes placeholder
+
+        //Assigns event handlers
+        window.onload = startScriptTasks;
+        continueEl.onclick = goTo(document.getElementById(continueEl.href.split('#')[1]));
+        eraseEl.onclick = eraseAll;
+        infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
+        textAreaEl.onkeydown = onWordBoundary(textAreaEl);
+        imgCardEl.onclick = focusOnClick(imgCardEl, true);
+        imgCardEl.lastChild.onfocus = function () {
+
+            //Allows clearing on click only once         
+            focusOnClick(imgCardEl, true)();
+            imgCardEl.onclick = focusOnClick(imgCardEl);
+            imgCardEl.lastChild.onfocus = null;
+        }
 
         //Detects and sets up localStorage in order to minimise requests.
         if (isLocalStorage()) {
@@ -66,15 +76,6 @@
             window.onbeforeunload = flushUrls('pictoUrls', pictoUrls);
         } else {
             pictoUrls = {};
-        }
-
-        //If there's a hash fragment, takes words from it. Truncates word list if necessary.
-        if (hash.length) {
-            autoWrite(hash.split(WORD_HASH_SEPARATOR).slice(0, WORD_HASH_LIMIT), imgCardEl);
-        
-        //If the hash fragment is empty, the first image card is last and only one => sets focus.
-        } else {
-            deferredFocus(imgCardEl.lastChild);
         }
     }
 
@@ -113,10 +114,17 @@
         }
     }
 
-    //Sets focus on input area on clicking the image card
-    function focusOnClick (currentTarget) {       
-        return function () {
-            currentTarget.lastChild.focus();
+    //Sets focus on input area on clicking the image card, clearing its current text content if specified.
+    function focusOnClick (currentTarget, clear) {
+        if (clear) {
+            return function () {
+                currentTarget.lastChild.innerHTML = '&nbsp;';
+                currentTarget.lastChild.focus();
+            }
+        } else {
+            return function () {
+                currentTarget.lastChild.focus();
+            }
         }
     }
 
@@ -143,9 +151,22 @@
         }
     }
 
-    //Removes loading feedback once all page resources are loaded.
-    function stopSpinner () {
+    //Runs anything that depends on this script
+    function startScriptTasks () {
+        var hash = location.hash.trim();
+
+        //Removes loading feedback
         continueEl.className = continueEl.className.replace(LOAD_CLASS, '');
+
+        //If there's a hash fragment, takes words from it and visualise them. Truncates word list if necessary.
+        if (hash.length) {
+
+            //First image card won't have placeholder => no clearing needed
+            imgCardEl.onclick = focusOnClick(imgCardEl);  
+            imgCardEl.lastChild.onfocus = null;
+            
+            autoWrite(hash.split(HASH_WORD_SEPARATOR).slice(0, HASH_WORD_LIMIT), imgCardEl);
+        }
     }
 
     //Programmatically adds words and their pictograms, waiting for any request to finish before proceeding
@@ -214,7 +235,7 @@
             }
         }
 
-        return text.join(WORD_HASH_SEPARATOR);
+        return text.join(HASH_WORD_SEPARATOR);
     }
 
     //Appends a new image card to the text area, complete with event handlers. Uses the global
