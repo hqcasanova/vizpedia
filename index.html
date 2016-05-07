@@ -49,10 +49,9 @@
     </style>
     <script>
         var introGifEl = new Image();
-        var coverEl = document.querySelector('.cover');
         introGifEl.onload = function () {
            setTimeout(function () {
-                coverEl.className += ' reveal';
+                document.querySelector('.cover').className += ' reveal';
            }, 5450);
         };
         introGifEl.src = 'demo.gif';
