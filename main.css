@@ -69,10 +69,8 @@ h1, h2 {
     font-size: .4em;
 }
 .center p {
-    margin: 7em 1.2em 1.2em;
-    font-size: 1.3em;
-    background: black;  
-    background: rgba(0,0,0,.5);   
+    margin: 1.2em;
+    font-size: 1.3em;   
 }
 #continue-button {
     line-height: 1.5em;

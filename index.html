@@ -29,7 +29,7 @@
         .cover {
             text-align: center;
             color: white;
-            background: black url('bookside.jpg') no-repeat center;
+            background: black;
             transition: opacity 3s;
         }
         .cover:before {
@@ -43,8 +43,17 @@
         }
         .center {
             display: inline-block;
+            width: 98%;
             margin-left: -.5em;
             vertical-align: middle;
+        }
+        .logo {
+            width: 70%;
+            max-width: 400px;
+            height: auto;
+        }
+        @media only screen and (max-height: 490px) {
+            .logo {display: none}
         }
     </style>
     <script>
@@ -59,7 +68,7 @@
     <link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="main.css"></noscript>
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
-    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/bookside.jpg" />
+    <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/pictograms.png" />
     <meta property="og:description" content="Vizpedia is an online dictionary service in 9 languages including English, French and German. It gives you pictures instead of text for a word's possible meanings and employs an optimised version of ARASAAC's CC-licensed symbol set, originally intended for Spanish users with learning difficulties." />
 </head>
 <body class="no-js">
@@ -67,7 +76,8 @@
     <div class="cover" style="opacity: 0">
         <div class="center">
             <h1>Vizpedia<sub>beta</sub></h1>
-            <p>Type a <b>word</b>, hit <b>space</b>... <em>Visualise it!</em></p>
+            <img alt="pictograms" src="pictograms.png" class="logo" height="400" width="400" />
+            <p>Type a <b>word</b>, hit <b>enter</b>... <em>Visualise it!</em></p>
             <a role="button" href="#notebook" title="Continue" id="continue-button" class="load button"></a>
             <a class="notice" href="http://www.enable-javascript.com/">JavaScript is disabled. Please <span>enable it</span> and refresh the page</a>
         </div>
@@ -92,9 +102,9 @@
                 <img alt="erase" src="erase.png" height="76" width="37" />
             </a>
         </form>
-        <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">type here</div></div></div>
+        <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">[type here]</div></div></div>
         <ul id="directions">
-            <li class="info">Type in a word followed by a space, tab or enter to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
+            <li class="info">Type in a term consisting of one or more words followed by a tab or enter to get its symbol &mdash;also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>&mdash; for the chosen language.</li>
             <li class="info">Some words may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
             <li class="info">Other words may have no entry in the visual dictionary for the chosen language. In that case, no pictogram will be displayed. The symbols were originally aimed at Spanish speakers and its expansion to other languages is still work in progress.</li>
             <li class="info">The page's address is updated as words are added. Using that address, you can share the page with the typed words included. They will be added automatically.</li>

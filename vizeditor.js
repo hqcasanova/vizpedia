@@ -9,7 +9,7 @@
     'use strict';
 
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
-    var WORD_KEYS = '|9|13|32|';        //keycodes considered word boundary markers: tab, enter, space
+    var WORD_KEYS = '|9|13|';           //keycodes considered word boundary markers: tab, enter
     var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
     var PICTO_CLASS = 'picto';          //pictogram's img class
@@ -62,9 +62,7 @@
         infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
         textAreaEl.onkeydown = onWordBoundary(textAreaEl);
         imgCardEl.onclick = focusOnClick(imgCardEl, true);
-        imgCardEl.lastChild.onfocus = function () {
-
-            //Allows clearing on click only once         
+        imgCardEl.lastChild.onfocus = function () { //Allows clearing on click only once         
             focusOnClick(imgCardEl, true)();
             imgCardEl.onclick = focusOnClick(imgCardEl);
             imgCardEl.lastChild.onfocus = null;
@@ -79,7 +77,7 @@
         }
     }
 
-    //Detection of locatStorage, taking into account buggy implementations that prevent setting and/or
+    //Detection of localStorage, taking into account buggy implementations that prevent setting and/or
     //removing items when on private browsing, for example.
     function isLocalStorage () {
         var supported = typeof window.localStorage !== 'undefined';
@@ -151,21 +149,18 @@
         }
     }
 
-    //Runs anything that depends on this script
+    //Runs anything that may trigger additional resource downloads and, therefore, must wait first for the
+    //critical ones before proceeding (eg: pictograms for sentence in hash if applicable)
     function startScriptTasks () {
         var hash = location.hash.trim();
 
         //Removes loading feedback
         continueEl.className = continueEl.className.replace(LOAD_CLASS, '');
 
-        //If there's a hash fragment, takes words from it and visualise them. Truncates word list if necessary.
-        if (hash.length) {
-
-            //First image card won't have placeholder => no clearing needed
-            imgCardEl.onclick = focusOnClick(imgCardEl);  
-            imgCardEl.lastChild.onfocus = null;
-            
-            autoWrite(hash.split(HASH_WORD_SEPARATOR).slice(0, HASH_WORD_LIMIT), imgCardEl);
+        //Pushes the default card with placeholder to the end of the to-be-written sentence.
+        //Truncates word list if necessary
+        if (hash.length) {    
+            autoWrite(hash.split(HASH_WORD_SEPARATOR).slice(0, HASH_WORD_LIMIT), newCard(imgCardEl));
         }
     }
 
@@ -174,19 +169,18 @@
     //text input while a pictogram is being looked up
     function autoWrite (words, cardEl) {
         var inputEl = cardEl.lastChild;
-        if (words.length) {
-            inputEl.contentEditable = false;       //only allows edition once response retrieved
-            cardEl.className += ' disabled';
-            inputEl.innerHTML = words.shift();
-            addPictos(inputEl, function () {
-                newCard();
-                inputEl.contentEditable = true;
-                cardEl.className = CARD_CLASS;
+
+        inputEl.contentEditable = false;       //only allows edition once response retrieved
+        cardEl.className += ' disabled';
+        inputEl.innerHTML = words.shift();
+        addPictos(inputEl, function () {
+            inputEl.contentEditable = true;
+            cardEl.className = CARD_CLASS;
+            if (words.length) {
+                newCard(imgCardEl);
                 autoWrite(words, cardEl.nextSibling);
-            });
-        } else {
-            deferredFocus(inputEl);
-        }
+            }
+        });
     }
 
     //Actions to be performed when a word ending is detected (such as pressing space)
@@ -239,29 +233,16 @@
     }
 
     //Appends a new image card to the text area, complete with event handlers. Uses the global
-    //image card mold element, updating it at the end for the next new card.
-    function newCard () {
-        textAreaEl.appendChild(newCardEl);
+    //image card mold element, updating it at the end for the next new card. If "beforeEl" is specified,
+    //it inserts the new card before the provided element.
+    function newCard (beforeEl) {
+        var cardEl;     //image card just inserted
+
+        textAreaEl.insertBefore(newCardEl, beforeEl || null);
         newCardEl.onclick = focusOnClick(newCardEl);
+        cardEl = newCardEl;
         newCardEl = newCardEl.cloneNode(true);
-
-        return textAreaEl.lastChild;
-    }
-
-    //Sets focus on last image card once it climbs above the fold and only for once
-    function deferredFocus (inputEl) { 
-        var interval;
-
-        if (inputEl.getBoundingClientRect().bottom > window.innerHeight) {
-            interval = window.setInterval(function () {
-                if (inputEl.getBoundingClientRect().bottom <= window.innerHeight) {
-                    inputEl.focus();
-                    window.clearInterval(interval); 
-                }
-            }, 300);
-        } else {
-            inputEl.focus();
-        }
+        return cardEl;
     }
 
     //Sets focus on next card element's input area. If there's no sibling card, appends a new empty 
