@@ -4,7 +4,8 @@
 (function () {
     'use strict';
 
-    var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0]|\.|,|;|:|\?|!)+$/gi;
+    var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0])+$/gi;
+    var PUNC_REGEX = /(\.|,|;|:|\?|¿|¡|!)+$/gi;
     var WORD_KEYS = '|9|13|';           //keycodes considered word boundary markers: tab, enter
     var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
@@ -55,6 +56,7 @@
         window.onload = startScriptTasks;
         continueEl.onclick = goTo(document.getElementById(continueEl.href.split('#')[1]));
         eraseEl.onclick = eraseAll;
+        langSelEl.onchange = setLangHash;
         infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
         textAreaEl.onkeydown = onWordBoundary(textAreaEl);
         imgCardEl.onclick = focusOnClick(imgCardEl, true);
@@ -125,6 +127,7 @@
     //Wipes out all the existing image cards and adds a blank one.
     function eraseAll (event) { 
         textAreaEl.innerHTML = '';
+        location.hash = '#';
         newCard().lastChild.focus();
     }
 
@@ -145,18 +148,32 @@
         }
     }
 
+    //Updates the last field in the hash (the language identifier) on language selection
+    function setLangHash () {
+        var hash = location.hash.trim();
+        var lastPos; 
+
+        if (hash.length) {
+            lastPos = hash.lastIndexOf(HASH_WORD_SEPARATOR);
+            location.hash = hash.substring(0, lastPos) + HASH_WORD_SEPARATOR + langSelEl.value;
+        }
+    } 
+
     //Runs anything that may trigger additional resource downloads and, therefore, must wait first for the
     //critical ones before proceeding (eg: pictograms for sentence in hash if applicable)
     function startScriptTasks () {
         var hash = location.hash.trim();
+        var words;
 
         //Removes loading feedback
         continueEl.className = continueEl.className.replace(LOAD_CLASS, '');
 
         //Pushes the default card with placeholder to the end of the to-be-written sentence.
-        //Truncates word list if necessary
+        //Gets the language setting (always the last field) and truncates word list if necessary
         if (hash.length) {    
-            autoWrite(hash.split(HASH_WORD_SEPARATOR).slice(0, HASH_WORD_LIMIT), newCard(imgCardEl));
+            words = hash.split(HASH_WORD_SEPARATOR);
+            langSelEl.value = words.pop();
+            autoWrite(words.slice(0, HASH_WORD_LIMIT), newCard(imgCardEl));
         }
     }
 
@@ -168,7 +185,7 @@
 
         inputEl.contentEditable = false;       //only allows edition once response retrieved
         cardEl.className += ' disabled';
-        inputEl.innerHTML = words.shift();
+        inputEl.innerHTML = decodeURIComponent(words.shift());
         addPictos(inputEl, function () {
             inputEl.contentEditable = true;
             cardEl.className = CARD_CLASS;
@@ -179,7 +196,7 @@
         });
     }
 
-    //Actions to be performed when a word ending is detected (such as pressing space)
+    //Actions to be performed when a word ending is detected (such as pressing enter)
     function onWordBoundary (currentTarget) {
         return function (event) {
             event = event || window.event;
@@ -210,7 +227,7 @@
 
     //Avoids using textContent (not supported on IE8) and sanitises each input area's text 
     //before adding it to the hash (needed as a workaround for Firefox's bug with innerHTML and
-    //contentEditable; it sometimes appends a <br/>).
+    //contentEditable).
     function getTextHash () {
         var cards = textarea.children;
         var numCards = cards.length;
@@ -221,9 +238,12 @@
         for (i; i < numCards; i++) {
             word = cards[i].lastChild.innerHTML.trim();
             if (word) {
-                text.push(word);
+                text.push(encodeURIComponent(word));
             }
         }
+
+        //Adds selected language indicator
+        text.push(langSelEl.value);
 
         return text.join(HASH_WORD_SEPARATOR);
     }
@@ -237,7 +257,13 @@
         textAreaEl.insertBefore(newCardEl, beforeEl || null);
         newCardEl.onclick = focusOnClick(newCardEl);
         cardEl = newCardEl;
-        newCardEl = newCardEl.cloneNode(true);
+
+        //Adds placeholder tag to solve Firefox's rendering bug with contentEditable.
+        //It then removes it from the cloned version of the image card.
+        newCardEl.lastChild.innerHTML = '<br>';
+        newCardEl = newCardEl.cloneNode(true); 
+        newCardEl.lastChild.innerHTML = '';
+
         return cardEl;
     }
 
@@ -258,6 +284,9 @@
         var frameEl = activeInput.previousSibling;
 
         callback = callback || function () {};
+
+        //Removes any punctuation before querying the API
+        word = word.replace(PUNC_REGEX, '');
 
         if (word.length) {
 

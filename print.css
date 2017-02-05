@@ -1,0 +1,6 @@
+.intro, .cover.reveal, .forkme, .top-bar, #directions {
+  display: none;
+}
+.notebook {
+  background: none;
+}

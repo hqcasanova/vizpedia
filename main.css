@@ -21,44 +21,7 @@ body {
 h1, h2 {
     font-weight: normal;
     font-family: "Bodoni MT", Didot, "Didot LT STD", "Book Antiqua", Garamond, "Times New Roman", serif;
-}
-
-/* Responsive design */
-@media only screen and (max-width: 639px) {
-    body {font-size: 80%}
-}
-@media only screen and (min-width: 640px) and (max-width: 959px) {
-    body {font-size: 90%}
-}
-@media only screen and (min-width: 1200px) {
-    body {font-size: 110%}
-}
-@media only screen and (min-width: 1400px) {
-    body {font-size: 120%}
-}
-@media only screen and (min-width: 1600px) {
-    body {font-size: 130%}
-}
-@media only screen and (min-width: 1800px) {
-    body {font-size: 140%}
-}
-@media only screen and (min-width: 2000px) {
-    body {font-size: 150%}
-}
-@media only screen and (min-width: 2200px) {
-    body {font-size: 160%}
-}
-@media only screen and (min-width: 2400px) {
-    body {font-size: 170%}
-}
-@media only screen and (min-width: 2600px) {
-    body {font-size: 180%}
-}
-@media only screen and (min-width: 2800px) {
-    body {font-size: 190%}
-}
-@media only screen and (min-width: 3000px) {
-    body {font-size: 200%}
+    color: white;
 }
 
 /* Cover */
@@ -105,19 +68,6 @@ h1, h2 {
     margin-top: 3em;
     text-align: center;
 }
-#directions {
-    overflow: hidden;
-    background: gray;
-}
-.info {
-    margin: 1.5em;
-    line-height: 1.5em;
-    font-size: 1.3em;
-    color: white;
-}
-.info a {
-    color: white;
-}
 
 /* Text area controls */
 .top-bar {
@@ -159,6 +109,26 @@ h1, h2 {
     content: 'i';
 }
 
+/* Info */
+#directions {
+    overflow: hidden;
+    background: gray;
+}
+#directions h2 {
+    margin: 1.5em;
+    text-align: center;
+    font-size: 2em;
+}
+.info {
+    margin: 1.5em;
+    line-height: 1.5em;
+    font-size: 1.3em;
+    color: white;
+}
+.info a {
+    color: white;
+}
+
 /* JavaScript detection */
 .no-js #notebook {
     display: none;
@@ -194,7 +164,7 @@ h1, h2 {
     text-decoration: underline;
 }
 
-/* Single-word container */
+/* Single-term container */
 .image-card {
     display: inline-block;
     margin-bottom: 1.7em;
@@ -230,4 +200,52 @@ h1, h2 {
     line-height: 1.5em;
     font-weight: 300;
     color: rgb(110, 110, 110);
+}
+
+/* Responsive design */
+@media only screen and (max-width: 639px) {
+    body {font-size: 80%}
+}
+@media only screen and (min-width: 640px) and (max-width: 959px) {
+    body {font-size: 90%}
+}
+@media only screen and (min-width: 1200px) {
+    body {font-size: 110%}
+}
+@media only screen and (min-width: 1400px) {
+    body {font-size: 120%}
+}
+@media only screen and (min-width: 1600px) {
+    body {font-size: 130%}
+}
+@media only screen and (min-width: 1800px) {
+    body {font-size: 140%}
+}
+@media only screen and (min-width: 2000px) {
+    body {font-size: 150%}
+}
+@media only screen and (min-width: 2200px) {
+    body {font-size: 160%}
+}
+@media only screen and (min-width: 2400px) {
+    body {font-size: 170%}
+}
+@media only screen and (min-width: 2600px) {
+    body {font-size: 180%}
+}
+@media only screen and (min-width: 2800px) {
+    body {font-size: 190%}
+}
+@media only screen and (min-width: 3000px) {
+    body {font-size: 200%}
+}
+
+/* Print styles. IE8: pulled as a separate stylesheet */
+@media print {
+    .intro, .cover.reveal, .forkme, .top-bar, #directions {
+      display: none;
+    }
+    .notebook {
+      background: none;
+    }
 }

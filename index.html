@@ -56,7 +56,7 @@
             .logo {display: none}
         }
     </style>
-    <script>
+    <script type="text/javascript">
         var introGifEl = new Image();
         introGifEl.onload = function () {
            setTimeout(function () {
@@ -66,6 +66,9 @@
         introGifEl.src = 'demo.gif';
     </script>
     <link rel="preload" href="main.css" as="style" onload="this.rel='stylesheet'">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" media="print" href="print.css" type="text/css" />
+    <![endif]-->
     <noscript><link rel="stylesheet" href="main.css"></noscript>
     <meta name="description" content="A responsive JS plugin for visual word definitions" />
     <meta property="og:image" content="http://hqcasanova.github.io/vizpedia/pictograms.png" />
@@ -88,37 +91,41 @@
         <form action="javascript:void(0);" class="top-bar">
             <a role="button" href="#directions" title="More info" id="info-button" class="button"></a>
             <select name="language" title="Select language" id="select-language">
-                <option value="1" selected="">English</option>
+                <option value="1" selected="">English (British)</option>
                 <option value="0">Español</option>
                 <option value="2">Français</option>
                 <option value="3">Català</option>
                 <option value="4">Italiano</option>
                 <option value="5">Deutsch</option>
                 <option value="6">Português</option>
-                <option value="7">Português (Brasil)</option>
+                <option value="7">Português (Brasileiro)</option>
                 <option value="8">Galego</option>
             </select>
-            <a role="button" href="#!" title="Erase all" id="erase-button" class="button">
+            <a role="button" href="void:javascript(0)" title="Erase all" id="erase-button" class="button">
                 <img alt="erase" src="erase.png" height="76" width="37" />
             </a>
         </form>
         <div id="textarea"><div class="image-card"><div class="frame none"><img alt="" src=""/></div><div contenteditable class="caption">[type here]</div></div></div>
-        <ul id="directions">
-            <li class="info">Type in a term consisting of one or more words. To then get the corresponding symbol in the chosen language, follow the term with the tab or enter key.</li> 
-            <li class="info">The symbol is also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>. Some terms may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
-            <li class="info">Other terms may have no entry in the visual dictionary for the chosen language. In that case, no pictogram will be displayed. The symbols were originally aimed at Spanish speakers and its expansion to other languages is still work in progress.</li>
-            <li class="info">The address bar is updated as terms are added. Using the expanded address, you can share the page with the typed terms included. They will be added automatically.</li>
-            <li class="info">Use the erase button on the top right to clear all text and reset the address bar.</li> 
-        </ul>
+        <div id="directions">
+            <h2>How does it work?</h2>
+            <ul>
+                <li class="info">Type in a term consisting of one or more words. To then get the corresponding symbol in the chosen language, follow the term with the tab or enter key. As terms can have multiple words, hitting space does not trigger a symbol lookup.</li> 
+                <li class="info">The symbol is also known as its <em><a target="_blank" href="https://en.wikipedia.org/wiki/Pictogram">pictogram</a></em>. Some terms may have multiple pictograms. Press on the displayed pictogram to see the other ones.</li>
+                <li class="info">There may be terms with the wrong or no pictogram. Spanish speakers where the target of the original database <em><a target="_blank" href="http://www.arasaac.org/">creators</a></em> and expansion to other languages is still work in progress.</li>
+                <li class="info">The address bar is updated as terms are added. Using the expanded address, you can share the page with the typed terms and language setting included. They will be added automatically.</li>
+                <li class="info">Use the erase button on the top right to clear all text and reset the address bar.</li> 
+                <li class="info">The page is print-friendly: only the text and pictograms will be printed.</li> 
+            </ul>
+        </div>
     </div>
-    <script>
+    <script type="text/javascript">
         //JavaScript detection
         document.body.className = "";
 
         //Pre-loads non-critical CSS asynchronously [c]2016 @scottjehl, Filament Group, Inc. Licensed MIT
-!function(e){"use strict";var n=function(n,t,o){function i(e){return a.body?e():void setTimeout(function(){i(e)})}function r(){l.addEventListener&&l.removeEventListener("load",r),l.media=o||"all"}var d,a=e.document,l=a.createElement("link");if(t)d=t;else{var s=(a.body||a.getElementsByTagName("head")[0]).childNodes;d=s[s.length-1]}var f=a.styleSheets;l.rel="stylesheet",l.href=n,l.media="only x",i(function(){d.parentNode.insertBefore(l,t?d:d.nextSibling)});var u=function(e){for(var n=l.href,t=f.length;t--;)if(f[t].href===n)return e();setTimeout(function(){u(e)})};return l.addEventListener&&l.addEventListener("load",r),l.onloadcssdefined=u,u(r),l};"undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this);
-!function(t){if(t.loadCSS){var e=loadCSS.relpreload={};if(e.support=function(){try{return t.document.createElement("link").relList.supports("preload")}catch(e){return!1}},e.poly=function(){for(var e=t.document.getElementsByTagName("link"),n=0;n<e.length;n++){var r=e[n];"preload"===r.rel&&"style"===r.getAttribute("as")&&(t.loadCSS(r.href,r),r.rel=null)}},!e.support()){e.poly();var n=t.setInterval(e.poly,300);t.addEventListener&&t.addEventListener("load",function(){t.clearInterval(n)}),t.attachEvent&&t.attachEvent("onload",function(){t.clearInterval(n)})}}}(this);
+        !function(e){"use strict";var n=function(n,t,o){function i(e){return a.body?e():void setTimeout(function(){i(e)})}function r(){l.addEventListener&&l.removeEventListener("load",r),l.media=o||"all"}var d,a=e.document,l=a.createElement("link");if(t)d=t;else{var s=(a.body||a.getElementsByTagName("head")[0]).childNodes;d=s[s.length-1]}var f=a.styleSheets;l.rel="stylesheet",l.href=n,l.media="only x",i(function(){d.parentNode.insertBefore(l,t?d:d.nextSibling)});var u=function(e){for(var n=l.href,t=f.length;t--;)if(f[t].href===n)return e();setTimeout(function(){u(e)})};return l.addEventListener&&l.addEventListener("load",r),l.onloadcssdefined=u,u(r),l};"undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this);
+        !function(t){if(t.loadCSS){var e=loadCSS.relpreload={};if(e.support=function(){try{return t.document.createElement("link").relList.supports("preload")}catch(e){return!1}},e.poly=function(){for(var e=t.document.getElementsByTagName("link"),n=0;n<e.length;n++){var r=e[n];"preload"===r.rel&&"style"===r.getAttribute("as")&&(t.loadCSS(r.href,r),r.rel=null)}},!e.support()){e.poly();var n=t.setInterval(e.poly,300);t.addEventListener&&t.addEventListener("load",function(){t.clearInterval(n)}),t.attachEvent&&t.attachEvent("onload",function(){t.clearInterval(n)})}}}(this);
     </script>
-    <script src="vizeditor.js"></script>
+    <script src="vizeditor.js" type="text/javascript"></script>
 </body>
 </html>
