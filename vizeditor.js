@@ -5,7 +5,7 @@
     'use strict';
 
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0])+$/gi;
-    var PUNC_REGEX = /(\.|,|;|:|\?|¿|¡|!)+$/gi;
+    var PUNC_REGEX = /(\.|,|;|:|\?|¿|¡|!)+/gi;
     var WORD_KEYS = '|9|13|';           //keycodes considered word boundary markers: tab, enter
     var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
@@ -13,6 +13,7 @@
     var LOAD_CLASS = 'load';            //class for loading spinner
     var MULTIPICTO_CLASS = 'multiple';  //class for pictogram container if multiple pictos found
     var HASH_WORD_SEPARATOR = '+';
+    var HASH_LANG_SEPARATOR = '@';
     var HASH_WORD_LIMIT = '20';
 
     var continueEl;             //DOM element for continue button
@@ -154,8 +155,8 @@
         var lastPos; 
 
         if (hash.length) {
-            lastPos = hash.lastIndexOf(HASH_WORD_SEPARATOR);
-            location.hash = hash.substring(0, lastPos) + HASH_WORD_SEPARATOR + langSelEl.value;
+            lastPos = hash.lastIndexOf(HASH_LANG_SEPARATOR);
+            location.hash = hash.substring(0, lastPos) + HASH_LANG_SEPARATOR + langSelEl.value;
         }
     } 
 
@@ -171,8 +172,19 @@
         //Pushes the default card with placeholder to the end of the to-be-written sentence.
         //Gets the language setting (always the last field) and truncates word list if necessary
         if (hash.length) {    
-            words = hash.split(HASH_WORD_SEPARATOR);
-            langSelEl.value = words.pop();
+            
+            //Sets the language from the hash. If no language identifier is found, use
+            //english by default.
+            hash = hash.split(HASH_LANG_SEPARATOR);
+            if (hash.length == 1) {
+                langSelEl.value = 1;
+                location.hash = hash[0] + HASH_LANG_SEPARATOR + 1;
+            } else {
+                langSelEl.value = hash[1];
+            }
+
+            //Extracts words from hash
+            words = hash[0].split(HASH_WORD_SEPARATOR);
             autoWrite(words.slice(0, HASH_WORD_LIMIT), newCard(imgCardEl));
         }
     }
@@ -233,6 +245,7 @@
         var numCards = cards.length;
         var text = [];
         var word = '';
+        var hash;
         var i = 0;
 
         for (i; i < numCards; i++) {
@@ -242,10 +255,13 @@
             }
         }
 
-        //Adds selected language indicator
-        text.push(langSelEl.value);
+        //Serialises list of words
+        hash = text.join(HASH_WORD_SEPARATOR);
 
-        return text.join(HASH_WORD_SEPARATOR);
+        //Tacks the selected language indicator onto the word list
+        hash = hash + HASH_LANG_SEPARATOR + langSelEl.value;
+
+        return hash;
     }
 
     //Appends a new image card to the text area, complete with event handlers. Uses the global
