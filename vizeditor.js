@@ -62,7 +62,6 @@
         textAreaEl.onkeydown = onWordBoundary(textAreaEl);
         imgCardEl.lastChild.onfocus = function () {     //Allows clearing on click only once         
             imgCardEl.lastChild.innerHTML = '<br>';     //Prevents Firefox bug with empty contendEditables
-            imgCardEl.lastChild.focus();
             imgCardEl.lastChild.onfocus = null;
         }
 
