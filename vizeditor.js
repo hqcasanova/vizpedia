@@ -51,7 +51,7 @@
         CARD_CLASS = imgCardEl.className;
         FRAME_CLASS = imgCardEl.firstChild.className;
         newCardEl = imgCardEl.cloneNode(true);
-        newCardEl.lastChild.innerHTML = '';     //removes placeholder
+        newCardEl.lastChild.innerHTML = '';             //removes placeholder
 
         //Assigns event handlers
         window.onload = startScriptTasks;
@@ -60,10 +60,9 @@
         langSelEl.onchange = setLangHash;
         infoEl.onclick = goTo(document.getElementById(infoEl.href.split('#')[1]));
         textAreaEl.onkeydown = onWordBoundary(textAreaEl);
-        imgCardEl.onclick = focusOnClick(imgCardEl, true);
-        imgCardEl.lastChild.onfocus = function () { //Allows clearing on click only once         
-            focusOnClick(imgCardEl, true)();
-            imgCardEl.onclick = focusOnClick(imgCardEl);
+        imgCardEl.lastChild.onfocus = function () {     //Allows clearing on click only once         
+            imgCardEl.lastChild.innerHTML = '<br>';     //Prevents Firefox bug with empty contendEditables
+            imgCardEl.lastChild.focus();
             imgCardEl.lastChild.onfocus = null;
         }
 
@@ -108,20 +107,6 @@
                 }
             }
             localStorage.setItem(key, JSON.stringify(urlObj));
-        }
-    }
-
-    //Sets focus on input area on clicking the image card, clearing its current text content if specified.
-    function focusOnClick (currentTarget, clear) {
-        if (clear) {
-            return function () {
-                currentTarget.lastChild.innerHTML = '&nbsp;';
-                currentTarget.lastChild.focus();
-            }
-        } else {
-            return function () {
-                currentTarget.lastChild.focus();
-            }
         }
     }
 
@@ -271,7 +256,6 @@
         var cardEl;     //image card just inserted
 
         textAreaEl.insertBefore(newCardEl, beforeEl || null);
-        newCardEl.onclick = focusOnClick(newCardEl);
         cardEl = newCardEl;
 
         //Adds placeholder tag to solve Firefox's rendering bug with contentEditable.

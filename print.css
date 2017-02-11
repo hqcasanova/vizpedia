@@ -1,6 +1,11 @@
-.intro, .cover.reveal, .forkme, .top-bar, #directions {
-  display: none;
+.intro, .cover.reveal, .forkme, .top-bar, .multiple:before, .multiple:after, #directions {
+    display: none;
 }
 .notebook {
-  background: none;
+    background: none;
+}
+.multiple: {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
 }
