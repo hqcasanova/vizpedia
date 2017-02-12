@@ -6,12 +6,14 @@
 
     var TRIM_REGEX = /^(#|<br>|&nbsp;|[\s\uFEFF\u00A0])+|(<br>|&nbsp;|[\s\uFEFF\u00A0])+$/gi;
     var PUNC_REGEX = /(\.|,|;|:|\?|¿|¡|!)+/gi;
-    var WORD_KEYS = '|9|13|';           //keycodes considered word boundary markers: tab, enter
+    var WORD_KEYS = '|8|9|13|';         //keycodes considered word boundary markers: tab, enter. Note: IE8 doesn't do indexOf on arrays
     var CARD_CLASS;                     //default image card's class
     var FRAME_CLASS;                    //default pictogram container's class
     var PICTO_CLASS = 'picto';          //pictogram's img class
+    var EMPTY_CLASS = 'none';           //an empty frame's class
     var LOAD_CLASS = 'load';            //class for loading spinner
     var MULTIPICTO_CLASS = 'multiple';  //class for pictogram container if multiple pictos found
+    var PLACEHOLDER;                    //text used as a placeholder for last image card after load
     var HASH_WORD_SEPARATOR = '+';
     var HASH_LANG_SEPARATOR = '@';
     var HASH_WORD_LIMIT = '20';
@@ -24,20 +26,20 @@
     var imgCardEl;              //DOM element for container of both pictogram and text represented by it
     var newCardEl;              //DOM element used as the mold for new image cards
     var pictoUrls;              //Global response cache. Every entry points to a list of urls.
-    
-    //Makes sure trimming also takes into account <br> (introduced by a bug on Firefox) and any nbsp
-    //(added to avoid a bug on Firefox and IE)
-    String.prototype.trim = function () {
-        return this.replace(TRIM_REGEX, '');
-    };
-
-    //Normalises innerHeight (IE8's equivalent is clientHeight)
-    window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
 
     initialise();
     
     //Sets up environment.
     function initialise () {
+
+        //Makes sure trimming also takes into account <br> (introduced to avoid a contendEditable
+        //bug on Firefox)
+        String.prototype.trim = function () {
+            return this.replace(TRIM_REGEX, '');
+        };
+
+        //Normalises innerHeight (IE8's equivalent is clientHeight)
+        window.innerHeight = window.innerHeight || document.documentElement.clientHeight;
 
         //Caches DOM elements
         continueEl = document.getElementById('continue-button');
@@ -51,6 +53,7 @@
         CARD_CLASS = imgCardEl.className;
         FRAME_CLASS = imgCardEl.firstChild.className;
         newCardEl = imgCardEl.cloneNode(true);
+        PLACEHOLDER = newCardEl.lastChild.innerHTML;
         newCardEl.lastChild.innerHTML = '';             //removes placeholder
 
         //Assigns event handlers
@@ -193,90 +196,67 @@
     }
 
     //Actions to be performed when a word ending is detected (such as pressing enter)
+    //"currentTarget" is the DOM element containing the card whose input the key event has
+    //been triggered on.
     function onWordBoundary (currentTarget) {
         return function (event) {
             event = event || window.event;
 
+            //Irons out differences between IE8 and modern browsers
             var target = event.target || event.srcElement;
+            var key = event.which || event.charCode || event.keyCode;
 
-            //TODO: support for backspace and arrows
-            if ((target && target.className == 'caption') && (WORD_KEYS.indexOf('|' + event.keyCode + '|') != -1)) {
+            var cardEl;
+
+            //TODO: support for backspace and arrows. Note: IE8 does not support indexOf on arrays.
+            if ((target && target.className == 'caption') && (WORD_KEYS.indexOf('|' + key + '|') != -1)) {
                 
-                //Prevents any caret movements
-                if (event.preventDefault) {
-                    event.preventDefault();
-                } else {
-                    event.returnValue = false;
+                //One of the word-boundary keys have been pressed
+                if (key > 8) {
+
+                    //Prevents any caret movements. Note: IE8 does not support preventDefault.
+                    if (event.preventDefault) {
+                        event.preventDefault();
+                    } else {
+                        event.returnValue = false;
+                    }
+                      
+                    //Adds any found pictograms
+                    addPictos(target);
+
+                    //Updates URL fragment with whatever text has been written so far
+                    location.hash = getTextHash();
+
+                    //Sets focus on next image card
+                    setFocusNext(target.parentElement.nextSibling);
+
+                //Backspace has been pressed and all text has been deleted
+                } else if ((key == 8) && (target.innerHTML.trim().length == 0)) {
+
+                    //The card is not the first one
+                    cardEl = target.parentElement.previousSibling;
+                    if (cardEl) {
+                        
+                        //Removes current card
+                        currentTarget.removeChild(target.parentElement);
+                        
+                        //Removes the deleted card's text from the hash
+                        location.hash = getTextHash();
+
+                        //Sets the focus on the previous card with the caret at the end of the text
+                        target = cardEl.lastChild;
+                        target.focus();
+                        flushCaret(target);
+
+                        //Prevents the deletion of the last character after moving the caret
+                        return false;
+                    }
                 }
-                  
-                //Adds any found pictograms
-                addPictos(target);
-
-                //Updates URL fragment with whatever text has been written so far
-                location.hash = getTextHash();
-
-                //Sets focus on next image card
-                setFocusNext(target.parentElement.nextSibling);
             }
         }
     }
 
-    //Avoids using textContent (not supported on IE8) and sanitises each input area's text 
-    //before adding it to the hash (needed as a workaround for Firefox's bug with innerHTML and
-    //contentEditable).
-    function getTextHash () {
-        var cards = textarea.children;
-        var numCards = cards.length;
-        var text = [];
-        var word = '';
-        var hash;
-        var i = 0;
-
-        for (i; i < numCards; i++) {
-            word = cards[i].lastChild.innerHTML.trim();
-            if (word) {
-                text.push(encodeURIComponent(word));
-            }
-        }
-
-        //Serialises list of words
-        hash = text.join(HASH_WORD_SEPARATOR);
-
-        //Tacks the selected language indicator onto the word list
-        hash = hash + HASH_LANG_SEPARATOR + langSelEl.value;
-
-        return hash;
-    }
-
-    //Appends a new image card to the text area, complete with event handlers. Uses the global
-    //image card mold element, updating it at the end for the next new card. If "beforeEl" is specified,
-    //it inserts the new card before the provided element.
-    function newCard (beforeEl) {
-        var cardEl;     //image card just inserted
-
-        textAreaEl.insertBefore(newCardEl, beforeEl || null);
-        cardEl = newCardEl;
-
-        //Adds placeholder tag to solve Firefox's rendering bug with contentEditable.
-        //It then removes it from the cloned version of the image card.
-        newCardEl.lastChild.innerHTML = '<br>';
-        newCardEl = newCardEl.cloneNode(true); 
-        newCardEl.lastChild.innerHTML = '';
-
-        return cardEl;
-    }
-
-    //Sets focus on next card element's input area. If there's no sibling card, appends a new empty 
-    //one right next to the current.
-    function setFocusNext (nextCardEl) {
-        if (nextCardEl) {
-            nextCardEl.lastChild.focus();
-        } else {
-            newCard().lastChild.focus();
-        }
-    }
-
-    //Adds any found pictograms and moves caret to new pictogram card. 
+    //Adds any found pictograms to the card's frame area. 
     //A callback after pictogram insertion (or not) can be specified 
     function addPictos (activeInput, callback) {
         var word = activeInput.innerHTML.trim();
@@ -335,7 +315,7 @@
 
             //If pictos found, shows first one
             if (numPictos) {
-                frameEl.className = frameEl.className.replace(' none', '');
+                frameEl.className = frameEl.className.replace(' ' + EMPTY_CLASS, '');
                 imgEl.className = PICTO_CLASS;
                 imgEl.src = imgUrls[0];
                 pictoUrls[word] = imgUrls;
@@ -358,6 +338,89 @@
                     }
                 }
             }
+        }
+    }
+
+    //Avoids using textContent (not supported on IE8) and sanitises each input area's text 
+    //before adding it to the hash (used as a workaround for Firefox's bug with innerHTML and
+    //contentEditable).
+    function getTextHash () {
+        var cards = textAreaEl.children;
+        var numCards = cards.length;
+        var text = [];
+        var word = '';
+        var hash;
+        var i = 0;
+
+        //Bypasses the last card if it's just a placeholder
+        if (textAreaEl.lastChild.innerText.trim() == PLACEHOLDER) {
+            numCards--;
+        }
+
+        //Builds a list of the encoded text in each card one by one
+        for (i; i < numCards; i++) {
+            word = cards[i].innerText.trim();
+            word && text.push(encodeURIComponent(word));
+        }
+
+        //Serialises list of words
+        hash = text.join(HASH_WORD_SEPARATOR);
+
+        //Tacks the selected language indicator onto the word list
+        hash = hash + HASH_LANG_SEPARATOR + langSelEl.value;
+
+        return hash;
+    }
+
+    //Sets focus on next card element's input area. If there's no sibling card, appends a new empty 
+    //one right next to the current.
+    function setFocusNext (nextCardEl) {
+        if (nextCardEl) {
+            nextCardEl.lastChild.focus();
+        } else {
+            newCard().lastChild.focus();
+        }
+    }
+
+    //Appends a new image card to the text area, complete with event handlers. Uses the global
+    //image card mold element, updating it at the end for the next new card. If "beforeEl" is specified,
+    //it inserts the new card before the provided element.
+    function newCard (beforeEl) {
+        var cardEl;     //image card just inserted
+
+        textAreaEl.insertBefore(newCardEl, beforeEl || null);
+        cardEl = newCardEl;
+
+        //Adds placeholder tag to solve Firefox's rendering bug with contentEditable.
+        //It then removes it from the cloned version of the image card.
+        newCardEl.lastChild.innerHTML = '<br>';
+        newCardEl = newCardEl.cloneNode(true); 
+        newCardEl.lastChild.innerHTML = '';
+
+        return cardEl;
+    }
+
+    //Sets caption's caret to the end of any present text. Useful for backspace.
+    //Based on Nico Burn's solution. Source: http://stackoverflow.com/a/3866442/2939000
+    function flushCaret (captionEl) {
+        var range;
+        var selection;
+        
+        //Firefox, Chrome, Opera, Safari, IE 9+
+        if (document.createRange) {  
+            range = document.createRange();         //Creates a range (a range is a like the selection but invisible)
+            range.selectNodeContents(captionEl);    //Selects the entire contents of the element with the range
+            range.collapse(false);                  //Collapses the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();      //Gets the selection object (allows you to change selection)
+            selection.removeAllRanges();            //Removes any selections already made
+            selection.addRange(range);              //Makes the range you have just created the visible selection
+        
+        //IE 8 and lower
+        } else if (document.selection) { 
+            range = document.body.createTextRange();//Creates a range (a range is a like the selection but invisible)
+            range.moveToElementText(captionEl);     //Selects the entire contents of the element with the range
+            range.collapse(false);                  //Collapses the range to the end point. false means collapse to end rather than the start
+            range.select();                         //Selects the range (make it the visible selection
         }
     }
 }());
