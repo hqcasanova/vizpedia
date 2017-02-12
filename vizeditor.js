@@ -208,14 +208,16 @@
 
             //Fix for android (ignores certain keys like backspace)
             if (key == 0 || key == 229) {
-                target.addEventListener('textInput', function(e) {
+                target.addEventListener('textInput', function handler (e) {
                     // e.data will be the 1:1 input you done
-                    var char = e.data; // In our example = "a"
+                    var char = e.data; 
                    
                     // If you want the keyCode..
-                    var keyCode = char.charCodeAt(0); // a = 97
+                    var keyCode = char.charCodeAt(0); 
 
-                    alert(keyCode);
+                    target.removeEventListener('textInput', handler);
+
+                    alert(e);
                 });
             }
 
