@@ -208,7 +208,15 @@
 
             //Fix for android (ignores certain keys like backspace)
             if (key == 0 || key == 229) {
-                alert(key);
+                target.addEventListener('textInput', function(e) {
+                    // e.data will be the 1:1 input you done
+                    var char = e.data; // In our example = "a"
+                   
+                    // If you want the keyCode..
+                    var keyCode = char.charCodeAt(0); // a = 97
+
+                    alert(keyCode);
+                });
             }
 
             var cardEl;
