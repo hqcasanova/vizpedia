@@ -206,21 +206,6 @@
             var target = event.target || event.srcElement;
             var key = event.which || event.charCode || event.keyCode;
 
-            //Fix for android (ignores certain keys like backspace)
-            if (key == 0 || key == 229) {
-                target.addEventListener('textInput', function handler (e) {
-                    // e.data will be the 1:1 input you done
-                    var char = e.data; 
-                   
-                    // If you want the keyCode..
-                    var keyCode = char.charCodeAt(0); 
-
-                    target.removeEventListener('textInput', handler);
-
-                    alert(e);
-                });
-            }
-
             var cardEl;
 
             //TODO: support for backspace and arrows. Note: IE8 does not support indexOf on arrays.
@@ -245,7 +230,9 @@
                     //Sets focus on next image card
                     setFocusNext(target.parentElement.nextSibling);
 
-                //Backspace has been pressed and all text has been deleted
+                //Backspace has been pressed and all text has been deleted 
+                //Note: not supported on Android and possible mobile at large. Keycode 229 returned
+                //https://bugs.chromium.org/p/chromium/issues/detail?id=118639
                 } else if ((key == 8) && (target.innerHTML.trim().length == 0)) {
 
                     //The card is not the first one
