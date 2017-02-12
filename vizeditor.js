@@ -206,6 +206,11 @@
             var target = event.target || event.srcElement;
             var key = event.which || event.charCode || event.keyCode;
 
+            //Fix for android (ignores certain keys like backspace)
+            if (key == 0 || key == 229) {
+                alert(key);
+            }
+
             var cardEl;
 
             //TODO: support for backspace and arrows. Note: IE8 does not support indexOf on arrays.
