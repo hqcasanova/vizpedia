@@ -1,4 +1,4 @@
-Copyright (c) 2016 Hector Quintero Casanova
+Copyright (c) 2017 Hector Quintero Casanova
 http://www.hqcasanova.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
