@@ -115,7 +115,7 @@ h1, h2 {
     background: gray;
 }
 #directions h2 {
-    margin: 1.5em;
+    margin: 1em .8em 0;
     text-align: center;
     font-size: 2.5em;
 }
@@ -128,6 +128,34 @@ h1, h2 {
 .info a {
     color: white;
 }
+
+/* Footer */
+#footer {
+    padding: 1% 2%;
+    font-size: 1em;
+    line-height: 1.5em;
+    text-align: right;
+    list-style-type: none;
+    background: #f0f0f0;
+}
+#footer li {
+    display: inline-block;
+    width: 50%;
+}
+#footer li:first-child {text-align: left}
+#footer li em {display: block}
+#footer img {
+    width: auto;
+    height: 2.1em;
+}
+.footer-link {
+    display: inline-block;
+    color: gray;
+    text-decoration: none;
+}
+.footer-link:active, .footer-link:focus, .footer-link:hover {text-decoration: underline}
+.mit {padding-left: .4em}
+.hq {padding-right: .4em}
 
 /* JavaScript detection */
 .no-js #notebook {
@@ -164,7 +192,7 @@ h1, h2 {
     text-decoration: underline;
 }
 
-/* Single-term container */
+/* Term container */
 .image-card {
     display: inline-block;
     margin-bottom: 1.7em;
