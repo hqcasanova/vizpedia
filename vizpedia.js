@@ -1,5 +1,5 @@
-/* picoSlides v1.0
- * Copyright (c) 2016 Hector Quintero Casanova
+/* vizpedia v1.0
+ * Copyright (c) 2017 Hector Quintero Casanova
  * Released under the MIT license
  */
 
