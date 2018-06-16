@@ -73,7 +73,7 @@ h1, h2 {
 .top-bar {
     overflow: hidden;
     padding: .3em .5em;
-    text-align: right;
+    text-align: center;
 }
 .button, .center:after {
     display: inline-block;
@@ -107,12 +107,18 @@ h1, h2 {
 }
 #info-button:before {
     content: 'i';
+    font-family: Georgia;
+    font-style: italic;
+    font-size: 1.85rem;
+}
+#erase-button {
+    float: right;
 }
 
 /* Info */
 #directions {
     overflow: hidden;
-    background: gray;
+    background: #636363;
 }
 #directions h2 {
     margin: 1em .8em 0;
