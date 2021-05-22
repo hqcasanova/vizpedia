@@ -63,7 +63,7 @@
         if (language === undefined) {   //default set this way since language can be 0
             this.language = 1;
         }                         
-        this.url = url || 'http://vizpedia.infinityfreeapp.com';
+        this.url = url || 'https://vizpedia-api.herokuapp.com/search';
         this.imgType = imgType || 'png';
         this.callback = callback || function (response) {console.log(response);};
     };
