@@ -1,7 +1,7 @@
-.intro, .cover.reveal, .forkme, .top-bar, .multiple:before, .multiple:after, #directions {
+.intro, .cover.reveal, .forkme, .top-bar, .multiple:before, .multiple:after, #directions, #footer {
     display: none;
 }
-.notebook {
+body, .notebook {
     background: none;
 }
 .multiple: {
